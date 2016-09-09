@@ -1,0 +1,27 @@
+﻿<Window x:Class="WatchOnlyBitcoinWallet.AboutWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="About" Height="326" Width="327" ResizeMode="NoResize" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" FontSize="14">
+    <Grid>
+        <TextBlock x:Name="txtGithubLink" HorizontalAlignment="Left" Margin="86,160,0,0" TextWrapping="Wrap" VerticalAlignment="Top">
+          <Hyperlink NavigateUri="https://github.com/" RequestNavigate="Hyperlink_RequestNavigate">
+            Github Repository Link
+          </Hyperlink>
+        </TextBlock>
+
+        <TextBlock HorizontalAlignment="Left" Margin="47,200,0,0" TextWrapping="Wrap" VerticalAlignment="Top">
+          <Hyperlink NavigateUri="https://github.com/" RequestNavigate="Hyperlink_RequestNavigate">
+            BitcoinTalk.org Announcement Link
+          </Hyperlink>
+        </TextBlock>
+
+        <TextBlock HorizontalAlignment="Left" Margin="110,236,0,0" TextWrapping="Wrap" VerticalAlignment="Top">
+          <Hyperlink x:Name="DonationHyperLink">
+            Donate Bitcoin
+          </Hyperlink>
+        </TextBlock>
+        <TextBlock HorizontalAlignment="Left" Margin="63,10,0,0" TextWrapping="Wrap" Text="Coding Enthusiast" VerticalAlignment="Top" FontFamily="Comic Sans MS" FontSize="22" FontWeight="Bold" TextAlignment="Center"/>
+        <TextBlock HorizontalAlignment="Left" Margin="10,46,0,0" TextWrapping="Wrap" Text="Watch Only Bitcoin Wallet" VerticalAlignment="Top" FontFamily="Comic Sans MS" FontSize="22" Width="292" FontWeight="Bold" TextAlignment="Center"/>
+        <TextBlock x:Name="txtVersion" HorizontalAlignment="Left" Margin="10,82,0,0" TextWrapping="Wrap" Text="Version" VerticalAlignment="Top" FontFamily="Comic Sans MS" FontSize="22" Width="292" FontWeight="Bold" TextAlignment="Center"/>
+    </Grid>
+</Window>
