@@ -11,7 +11,7 @@
         <Label Content="$ Price:" HorizontalAlignment="Left" Margin="10,38,0,0" VerticalAlignment="Top" FontFamily="Comic Sans MS"/>
         <Label Content="Symbol:" HorizontalAlignment="Left" Margin="9,68,0,0" VerticalAlignment="Top" FontFamily="Comic Sans MS"/>
 
-        <Button x:Name="btnSave" Content="Save" HorizontalAlignment="Left" Margin="220,10,0,0" VerticalAlignment="Top" Width="75" Click="btnSave_Click" IsDefault="True" IsEnabled="False"/>
-        <Button x:Name="btnCancel" Content="Cancel" HorizontalAlignment="Left" Margin="220,43,0,0" VerticalAlignment="Top" Width="75" IsCancel="True" Click="btnCancel_Click"/>
+        <Button x:Name="btnSave" Content="Save &amp; Exit" HorizontalAlignment="Left" Margin="212,10,0,0" VerticalAlignment="Top" Width="83" Click="btnSave_Click" IsDefault="True" IsEnabled="False"/>
+        <Button x:Name="btnCancel" Content="Cancel" HorizontalAlignment="Left" Margin="212,43,0,0" VerticalAlignment="Top" Width="83" IsCancel="True" Click="btnCancel_Click"/>
     </Grid>
 </Window>
