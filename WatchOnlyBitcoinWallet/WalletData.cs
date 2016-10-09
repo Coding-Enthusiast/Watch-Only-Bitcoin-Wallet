@@ -16,7 +16,6 @@ namespace WatchOnlyBitcoinWallet
         private static string mySettingPath = myFolderPath + @"\BitcoinBalance - Settings.txt";
         public static List<BitcoinAddress> BitAddList = new List<BitcoinAddress>();
         public static SettingsClass Settings = new SettingsClass();
-        public static string DonationAddress = "1Q9swRQuwhTtjZZ2yguFWk7m7pszknkWyk";
 
         public static void Load()
         {
@@ -26,7 +25,6 @@ namespace WatchOnlyBitcoinWallet
                 {
                     Directory.CreateDirectory(myFolderPath);
                 }
-                BitAddList.Add(new BitcoinAddress() { Name = "Donations", Address = DonationAddress });
                 Save();
             }
             else
@@ -40,8 +38,6 @@ namespace WatchOnlyBitcoinWallet
 
             if (!File.Exists(mySettingPath))
             {
-                Settings.BitcoinPriceInUSD = 600;
-                Settings.DollarPriceInLocalCurrency = 0;
                 SaveSettings();
             }
             else

@@ -13,6 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using System.ComponentModel;
+
 namespace WatchOnlyBitcoinWallet
 {
     /// <summary>
@@ -20,15 +22,14 @@ namespace WatchOnlyBitcoinWallet
     /// </summary>
     public partial class MainWindow : Window
     {
-        List<TextBox> balanceTextList = new List<TextBox>();
+        GridViewColumnHeader listViewSortCol = null;
+        SortAdorner listViewSortAdorner = null;
+
         public MainWindow()
         {
             InitializeComponent();
             WalletData.Load();
-            foreach (var item in WalletData.BitAddList)
-            {
-                AddTextBox(item);
-            }
+            lvAddresses.ItemsSource = WalletData.BitAddList;
             CalculateTotal();
             lblLocalCurrStmbol.Content = WalletData.Settings.LocalCurrencySymbol;
             btnSave.IsEnabled = false;
@@ -36,66 +37,6 @@ namespace WatchOnlyBitcoinWallet
             txtTotalB.Background = Brushes.White;
             var ver = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
             txtVersion.Text = string.Format("Version {0}.{1}.{2}", ver.Major, ver.Minor, ver.Build);
-        }
-
-        private void AddTextBox(BitcoinAddress bitAdd)
-        {
-            int spaceFromTop = 70;
-            double minWinHeight = 333;
-            int i = WalletData.BitAddList.IndexOf(bitAdd);
-
-            TextBox tbName = new TextBox() { Width = 85, Height = 25, TextAlignment = TextAlignment.Center, Name = "txtName" + i };
-            tbName.Margin = new Thickness(10, spaceFromTop + (i * 30), 0, 0);
-            tbName.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
-            tbName.VerticalAlignment = System.Windows.VerticalAlignment.Top;
-            gridMain.Children.Add(tbName);
-
-            TextBox tbAddress = new TextBox() { Width = 300, Height = 25, Name = "txtAddress" + i };
-            tbAddress.Margin = new Thickness(100, spaceFromTop + (i * 30), 0, 0);
-            tbAddress.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
-            tbAddress.VerticalAlignment = System.Windows.VerticalAlignment.Top;
-            gridMain.Children.Add(tbAddress);
-
-            TextBox tbBalance = new TextBox() { Width = 100, Height = 25, IsReadOnly = true, Name = "txtBalance" + i };
-            tbBalance.Width = 100;
-            tbBalance.Margin = new Thickness(405, spaceFromTop + (i * 30), 0, 0);
-            tbBalance.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
-            tbBalance.VerticalAlignment = System.Windows.VerticalAlignment.Top;
-            gridMain.Children.Add(tbBalance);
-
-            double myWinHeight = ((i + 1) * (25 + 5)) + spaceFromTop + 50;
-            windowMain.Height = (myWinHeight > minWinHeight) ? myWinHeight : minWinHeight;
-
-            tbName.Text = bitAdd.Name;
-            tbName.TextChanged += textbox_TextChanged;
-            tbAddress.Text = bitAdd.Address;
-            tbAddress.TextChanged += textbox_TextChanged;
-            tbBalance.Text = string.Format("{0:0.00000000}", bitAdd.Balance);
-            tbBalance.TextChanged += textbox_TextChanged;
-            balanceTextList.Add(tbBalance);
-        }
-        private void textbox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            //i is the index of the textbox e.g. "txtName3"
-            int i;
-            TextBox tb = (TextBox)sender;
-            if (tb.Name.Contains("txtName"))
-            {
-                i = int.Parse(tb.Name.Substring(7));
-                WalletData.BitAddList[i].Name = tb.Text;
-            }
-            else if (tb.Name.Contains("txtAddress"))
-            {
-                i = int.Parse(tb.Name.Substring(10));
-                WalletData.BitAddList[i].Address = tb.Text;
-            }
-            else if (tb.Name.Contains("txtBalance"))
-            {
-                i = int.Parse(tb.Name.Substring(10));
-                WalletData.BitAddList[i].Balance = decimal.Parse(tb.Text);
-            }
-            btnSave.IsEnabled = true;
-            headerSave.IsEnabled = true;
         }
 
 
@@ -139,50 +80,84 @@ namespace WatchOnlyBitcoinWallet
             }
         }
 
-
-        private void NewAddress_Click(object sender, RoutedEventArgs e)
+        private void lvAddressesColumnHeader_Click(object sender, RoutedEventArgs e)
         {
-            var myAddress = new BitcoinAddress();
-            WalletData.BitAddList.Add(myAddress);
-            AddTextBox(myAddress);
-        }
-        private void Save_Click(object sender, RoutedEventArgs e)
-        {
-            WalletData.Save();
-            btnSave.IsEnabled = false;
-            headerSave.IsEnabled = false;
-        }
+            GridViewColumnHeader column = (GridViewColumnHeader)sender;
+            string sortBy = column.Tag.ToString();
+            if (listViewSortCol != null)
+            {
+                AdornerLayer.GetAdornerLayer(listViewSortCol).Remove(listViewSortAdorner);
+                lvAddresses.Items.SortDescriptions.Clear();
+            }
 
+            ListSortDirection newDir = ListSortDirection.Ascending;
+            if (listViewSortCol == column && listViewSortAdorner.Direction == newDir)
+                newDir = ListSortDirection.Descending;
+
+            listViewSortCol = column;
+            listViewSortAdorner = new SortAdorner(listViewSortCol, newDir);
+            AdornerLayer.GetAdornerLayer(listViewSortCol).Add(listViewSortAdorner);
+            lvAddresses.Items.SortDescriptions.Add(new SortDescription(sortBy, newDir));
+        }
+        private void lvAddresses_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (lvAddresses.SelectedItem != null)
+            {
+                var myWin = new AddressWindow((BitcoinAddress)lvAddresses.SelectedItem);
+                myWin.Owner = this;
+                myWin.ShowDialog();
+                if (myWin.IsChanged)
+                {
+                    lvAddresses.Items.Refresh();
+                    btnSave.IsEnabled = true;
+                }
+            }
+        }
 
         private async void GetBalances_Click(object sender, RoutedEventArgs e)
         {
             btnGetBalance.IsEnabled = false;
             double total = WalletData.BitAddList.Count;
             progressBar.Value = 0;
+            bool balChanged = false;
             for (int i = 0; i < WalletData.BitAddList.Count; i++)
             {
-                decimal tempBalance = WalletData.BitAddList[i].Balance;
-                balanceTextList[i].Background = Brushes.Yellow;
+                decimal tempBal = WalletData.BitAddList[i].Balance;
                 await WalletData.GetBalance(WalletData.BitAddList[i]);
-                if (WalletData.BitAddList[i].Balance > tempBalance)
+                if (balChanged != true && WalletData.BitAddList[i].Balance != tempBal)
                 {
-                    balanceTextList[i].Background = Brushes.LightGreen;
-                    balanceTextList[i].Text = string.Format("{0:0.00000000}", WalletData.BitAddList[i].Balance);
-                    balanceTextList[i].ToolTip = string.Format("{0:0.00000000}", WalletData.BitAddList[i].Balance - tempBalance);
-                }
-                else if (WalletData.BitAddList[i].Balance < tempBalance)
-                {
-                    balanceTextList[i].Background = Brushes.Orange;
-                    balanceTextList[i].Text = string.Format("{0:0.00000000}", WalletData.BitAddList[i].Balance);
-                    balanceTextList[i].ToolTip = string.Format("{0:0.00000000}", WalletData.BitAddList[i].Balance - tempBalance);
-                }
-                else if (WalletData.BitAddList[i].Balance == tempBalance)
-                {
-                    balanceTextList[i].Background = Brushes.White;
+                    balChanged = true;
                 }
                 progressBar.Value = ((i + 1) / total) * 100;
             }
-            CalculateTotal();
+            if (balChanged)
+            {
+                btnSave.IsEnabled = true;
+                headerSave.IsEnabled = true;
+                lvAddresses.Items.Refresh();
+                CalculateTotal();
+            }
+        }
+
+        private void Save_Click(object sender, RoutedEventArgs e)
+        {
+            WalletData.Save();
+            btnSave.IsEnabled = false;
+            headerSave.IsEnabled = false;
+        }
+        private void NewAddress_Click(object sender, RoutedEventArgs e)
+        {
+            var myWin = new AddressWindow();
+            myWin.Owner = this;
+            myWin.ShowDialog();
+            if (myWin.IsChanged)
+            {
+                WalletData.BitAddList.Add(myWin.addr);
+                lvAddresses.Items.Refresh();
+                btnSave.IsEnabled = true;
+                headerSave.IsEnabled = true;
+                btnGetBalance.IsEnabled = true;
+            }
         }
         private void Settings_Click(object sender, RoutedEventArgs e)
         {
