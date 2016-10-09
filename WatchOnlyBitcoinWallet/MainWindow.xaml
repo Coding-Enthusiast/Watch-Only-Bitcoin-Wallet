@@ -30,7 +30,7 @@
             </MenuItem>
         </Menu>
         
-        <ListView x:Name="lvAddresses" HorizontalAlignment="Left" Height="239" Margin="131,35,0,0" VerticalAlignment="Top" Width="532">
+        <ListView x:Name="lvAddresses" HorizontalAlignment="Left" Height="239" Margin="131,35,0,0" VerticalAlignment="Top" Width="532" MouseDoubleClick="lvAddresses_MouseDoubleClick">
             <ListView.Resources>
                 <Style TargetType="{x:Type GridViewColumnHeader}">
                     <Setter Property="HorizontalContentAlignment" Value="Left" />
@@ -40,17 +40,17 @@
                 <GridView>
                     <GridViewColumn DisplayMemberBinding="{Binding Name}">
                         <GridViewColumn.Header>
-                            <GridViewColumnHeader Tag="NameTag" Click="lvUsersColumnHeader_Click">Name</GridViewColumnHeader>
+                            <GridViewColumnHeader Tag="Name" Click="lvAddressesColumnHeader_Click">Name</GridViewColumnHeader>
                         </GridViewColumn.Header>
                     </GridViewColumn>
                     <GridViewColumn DisplayMemberBinding="{Binding Address}">
                         <GridViewColumn.Header>
-                            <GridViewColumnHeader Tag="Address" Click="lvUsersColumnHeader_Click">Address</GridViewColumnHeader>
+                            <GridViewColumnHeader Tag="Address" Click="lvAddressesColumnHeader_Click">Address</GridViewColumnHeader>
                         </GridViewColumn.Header>
                     </GridViewColumn>
                     <GridViewColumn DisplayMemberBinding="{Binding Balance}">
                         <GridViewColumn.Header>
-                            <GridViewColumnHeader Tag="Balance" Click="lvUsersColumnHeader_Click">Balance</GridViewColumnHeader>
+                            <GridViewColumnHeader Tag="Balance" Click="lvAddressesColumnHeader_Click">Balance</GridViewColumnHeader>
                         </GridViewColumn.Header>
                     </GridViewColumn>
                 </GridView>
