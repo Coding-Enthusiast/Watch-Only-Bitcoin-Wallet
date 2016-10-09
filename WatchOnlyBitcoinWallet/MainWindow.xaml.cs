@@ -119,12 +119,24 @@ namespace WatchOnlyBitcoinWallet
             btnGetBalance.IsEnabled = false;
             double total = WalletData.BitAddList.Count;
             progressBar.Value = 0;
+            bool balChanged = false;
             for (int i = 0; i < WalletData.BitAddList.Count; i++)
             {
+                decimal tempBal = WalletData.BitAddList[i].Balance;
                 await WalletData.GetBalance(WalletData.BitAddList[i]);
+                if (balChanged != true && WalletData.BitAddList[i].Balance != tempBal)
+                {
+                    balChanged = true;
+                }
                 progressBar.Value = ((i + 1) / total) * 100;
             }
-            CalculateTotal();
+            if (balChanged)
+            {
+                btnSave.IsEnabled = true;
+                headerSave.IsEnabled = true;
+                lvAddresses.Items.Refresh();
+                CalculateTotal();
+            }
         }
 
         private void Save_Click(object sender, RoutedEventArgs e)
