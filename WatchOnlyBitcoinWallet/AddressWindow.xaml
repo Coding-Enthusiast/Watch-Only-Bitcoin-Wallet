@@ -3,8 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="AddressWindow" Height="121" Width="595" Icon="myICO.ico" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" ShowInTaskbar="False" FontSize="14">
     <Grid>
-        <TextBox x:Name="txtName" HorizontalAlignment="Left" Height="26" Margin="10,45,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="txt_TextChanged"/>
-        <TextBox x:Name="txtAddress" HorizontalAlignment="Left" Height="26" Margin="135,45,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="322" TextChanged="txt_TextChanged"/>
+        <TextBox x:Name="txtName" HorizontalAlignment="Left" Height="26" Margin="10,45,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="TextBoxes_TextChanged"/>
+        <TextBox x:Name="txtAddress" HorizontalAlignment="Left" Height="26" Margin="135,45,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="322" TextChanged="TextBoxes_TextChanged"/>
         
         <Label Content="Name Tag" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" FontFamily="Comic Sans MS" FontWeight="Bold"/>
         <Label Content="Address" HorizontalAlignment="Left" Margin="135,10,0,0" VerticalAlignment="Top" FontFamily="Comic Sans MS" FontWeight="Bold"/>

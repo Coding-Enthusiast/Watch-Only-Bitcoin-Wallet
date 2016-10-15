@@ -28,18 +28,24 @@ namespace WatchOnlyBitcoinWallet
         public MainWindow()
         {
             InitializeComponent();
+
             WalletData.Load();
             lvAddresses.ItemsSource = WalletData.BitAddList;
-            CalculateTotal();
             lblLocalCurrStmbol.Content = WalletData.Settings.LocalCurrencySymbol;
+            CalculateTotal();
+
+            txtTotalB.Background = Brushes.White;
             btnSave.IsEnabled = false;
             headerSave.IsEnabled = false;
-            txtTotalB.Background = Brushes.White;
+
             var ver = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
             txtVersion.Text = string.Format("Version {0}.{1}.{2}", ver.Major, ver.Minor, ver.Build);
         }
 
-
+        /// <summary>
+        /// Gets total bitcoin balance by adding all balances.
+        /// And calculates value in Dollar and local currency.
+        /// </summary>
         void CalculateTotal()
         {
             decimal tempBitcoin = decimal.Parse(txtTotalB.Text);
@@ -80,6 +86,9 @@ namespace WatchOnlyBitcoinWallet
             }
         }
 
+        /// <summary>
+        /// Used for sorting the ColumnHeaders.
+        /// </summary>
         private void lvAddressesColumnHeader_Click(object sender, RoutedEventArgs e)
         {
             GridViewColumnHeader column = (GridViewColumnHeader)sender;
@@ -92,13 +101,20 @@ namespace WatchOnlyBitcoinWallet
 
             ListSortDirection newDir = ListSortDirection.Ascending;
             if (listViewSortCol == column && listViewSortAdorner.Direction == newDir)
+            {
                 newDir = ListSortDirection.Descending;
+            }
 
             listViewSortCol = column;
             listViewSortAdorner = new SortAdorner(listViewSortCol, newDir);
             AdornerLayer.GetAdornerLayer(listViewSortCol).Add(listViewSortAdorner);
             lvAddresses.Items.SortDescriptions.Add(new SortDescription(sortBy, newDir));
         }
+
+        /// <summary>
+        /// Used for handling DoubleClick event,
+        /// Which will open a new instance of AddressWindow to edit the double clicked address.
+        /// </summary>
         private void lvAddresses_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             if (lvAddresses.SelectedItem != null)
@@ -152,7 +168,7 @@ namespace WatchOnlyBitcoinWallet
             myWin.ShowDialog();
             if (myWin.IsChanged)
             {
-                WalletData.BitAddList.Add(myWin.addr);
+                WalletData.BitAddList.Add(myWin.BitcoinAddress);
                 lvAddresses.Items.Refresh();
                 btnSave.IsEnabled = true;
                 headerSave.IsEnabled = true;
