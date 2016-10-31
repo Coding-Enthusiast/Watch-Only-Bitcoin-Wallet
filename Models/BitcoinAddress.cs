@@ -1,25 +1,63 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CommonLibrary;
 
 namespace Models
 {
-    public class BitcoinAddress
+    public class BitcoinAddress : ValidatableBase
     {
         /// <summary>
         /// Name acts as a tag for the address
         /// </summary>
-        public string Name { get; set; }
-        public string Address { get; set; }
-        public decimal Balance { get; set; }
-
-        public bool Validate()
+        private string name;
+        public string Name
         {
-            //Check Base58
+            get
+            {
+                return name;
+            }
+            set
+            {
+                if (name != value)
+                {
+                    name = value;
+                    RaisePropertyChanged("Name");
+                }
+            }
+        }
 
-            return true;
+        private string address;
+        public string Address
+        {
+            get
+            {
+                return address;
+            }
+            set
+            {
+                if (address != value)
+                {
+                    address = value;
+                    // Check to see if input is a valid bitcoin address
+                    Validate(value);
+                    RaisePropertyChanged("Address");
+                }
+            }
+        }
+
+        private decimal balance;
+        public decimal Balance
+        {
+            get
+            {
+                return balance;
+            }
+            set
+            {
+                if (balance != value)
+                {
+                    balance = value;
+                    RaisePropertyChanged("Balance");
+                }
+            }
         }
     }
 }
