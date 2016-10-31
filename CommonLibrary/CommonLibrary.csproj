@@ -30,6 +30,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
@@ -40,7 +41,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AsyncCommand.cs" />
+    <Compile Include="AsyncCommandBase.cs" />
     <Compile Include="CommonBase.cs" />
+    <Compile Include="IAsyncCommand.cs" />
+    <Compile Include="NotifyTaskCompletion.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ValidatableBase.cs" />
   </ItemGroup>

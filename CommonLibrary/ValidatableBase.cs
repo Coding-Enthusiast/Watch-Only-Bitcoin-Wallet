@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Collections;
-using System.Security.Cryptography;
 using System.Numerics;
+using System.Security.Cryptography;
 
 namespace CommonLibrary
 {
@@ -91,6 +91,7 @@ namespace CommonLibrary
                 AddError("Address", "not validd.");
             }
         }
+
         private bool Base58Check(string btcAddressFormat)
         {
             //Characters used in Base58Encoding which is all chars excluding "0OIl" 
