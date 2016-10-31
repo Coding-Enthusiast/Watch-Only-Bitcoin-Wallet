@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Models
+namespace CommonLibrary
 {
     public class CommonBase : INotifyPropertyChanged
     {
