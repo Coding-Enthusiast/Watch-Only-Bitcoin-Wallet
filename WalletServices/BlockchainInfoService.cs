@@ -1,26 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Models;
 using Newtonsoft.Json.Linq;
-using System.Collections.ObjectModel;
+using Models;
 
 namespace WalletServices
 {
     public class BlockchainInfoService : ApiCall
     {
-        public static async void GetBalace(ObservableCollection<BitcoinAddress> bitAddrList)
+        public static async Task<bool> GetBalace(List<BitcoinAddress> bitAddrList)
         {
+            bool IsBalanceChanged = false;
             foreach (var bitAddr in bitAddrList)
             {
                 string url = "https://blockchain.info/address/" + bitAddr.Address + "?format=json&limit=0";
                 JObject jResult = await GetApiResponse(url);
                 decimal satoshi = 0.00000001m;
-                bitAddr.Balance = (int)jResult["final_balance"] * satoshi;
+                decimal bal = (int)jResult["final_balance"] * satoshi;
+                if (bitAddr.Balance != bal)
+                {
+                    bitAddr.Balance = bal;
+                    IsBalanceChanged = true;
+                }
             }
+            return IsBalanceChanged;
         }
     }
 }
