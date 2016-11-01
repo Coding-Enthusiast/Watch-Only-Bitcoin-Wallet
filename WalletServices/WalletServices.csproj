@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="ApiCall.cs" />
     <Compile Include="BlockchainInfoService.cs" />
+    <Compile Include="PriceServices.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WalletData.cs" />
   </ItemGroup>
