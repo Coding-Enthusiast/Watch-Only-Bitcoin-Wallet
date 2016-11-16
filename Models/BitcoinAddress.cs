@@ -10,10 +10,7 @@ namespace Models
         private string name;
         public string Name
         {
-            get
-            {
-                return name;
-            }
+            get { return name; }
             set
             {
                 if (name != value)
@@ -27,10 +24,7 @@ namespace Models
         private string address;
         public string Address
         {
-            get
-            {
-                return address;
-            }
+            get { return address; }
             set
             {
                 if (address != value)
@@ -46,10 +40,7 @@ namespace Models
         private decimal balance;
         public decimal Balance
         {
-            get
-            {
-                return balance;
-            }
+            get { return balance; }
             set
             {
                 if (balance != value)

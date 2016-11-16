@@ -88,7 +88,7 @@ namespace CommonLibrary
             }
             else
             {
-                AddError("Address", "not validd.");
+                AddError("Address", "Address can not be empty!");
             }
         }
 
