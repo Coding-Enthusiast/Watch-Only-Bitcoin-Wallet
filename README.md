@@ -5,23 +5,24 @@
 **Packages needed:** Newtonsoft.Json
 
 This is a simple open source tool created to help keep track of bitcoin addresses and their balances in a light application.
-![ScreenShot](http://i.imgur.com/5Ib8dX1.jpg)
+![ScreenShot](https://i.imgur.com/y7dGPRf.jpg)
 
 
 ##Features
-1. Adding multiple bitcoin addresses
-2. Automatic Window size adjustment based on the number of bitcoin addresses.
-3. Adding a Name Tag for each address.
+1. Capable of holding multiple bitcoin addresses with tags, address and their balances.
+2. Checking each bitcoin address to be correct with base58encoding.
+3. Using a grid (like excel) to show the list which makes it easy to add/edit/remove items.
 4. Using blockchain.info API (more will be added in the future) to check the balances.
-5. See the total bitcoin amount in BTC, $ and your local currency.
+5. See the total bitcoin amount in BTC, USD and user defined local currency.
+6. USD value can be retreived from Bitfinex.com or Btc-e.com exchanges using their API.
 
 
 ##To Do List
 the following are the features that will be added in the future. Please leave your feedback in the Bitcointalk Announcement topic or in Issues of Github.
 
 - [ ] Add other block explorer's APIs and the ability to switch between them.
-- [ ] Add a couple of bitcoin exchanges API for receiving the live bitcoin price.
-- [ ] Add Base58CheckSum check for the input bitcoin address to prevent typos.
+- [x] Add a couple of bitcoin exchanges API for receiving the live bitcoin price.
+- [x] Add Base58CheckSum check for the input bitcoin address to prevent typos.
 - [x] Change the style from TextBox to a ListView to make adding unlimited addresses easier.
 - [ ] Handling possible Excretions properly.
 - [ ] Add an option to create a raw unsigned transaction.
