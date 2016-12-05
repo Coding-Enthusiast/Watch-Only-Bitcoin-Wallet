@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WatchOnlyBitcoinWallet
+namespace Models
 {
     public class SettingsClass
     {
