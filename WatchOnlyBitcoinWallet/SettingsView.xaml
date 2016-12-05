@@ -19,8 +19,8 @@
 
         <Button Content="Save to File" HorizontalAlignment="Left" Margin="212,10,0,0" VerticalAlignment="Top" Width="83" IsDefault="True" Command="{Binding SaveCommand, Mode=OneWay}" IsEnabled="{Binding IsSaveButtonEnabled}"/>
         <Button x:Name="btnCancel" Content="Cancel" HorizontalAlignment="Left" Margin="212,43,0,0" VerticalAlignment="Top" Width="83" IsCancel="True"/>
-        
-        <ComboBox HorizontalAlignment="Left" Margin="74,103,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding PriceServiceList}" SelectedIndex="0"/>
+
+        <ComboBox HorizontalAlignment="Left" Margin="74,103,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding PriceServiceList}" SelectedItem="{Binding SelectedPriceService}"/>
         <Button Content="Update" HorizontalAlignment="Left" Margin="9,103,0,0" VerticalAlignment="Top" Width="60" Command="{Binding GetPriceCommand, Mode=OneWay}"/>
     </Grid>
 </UserControl>

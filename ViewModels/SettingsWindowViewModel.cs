@@ -15,6 +15,7 @@ namespace ViewModels
             settings = new SettingsClass();
 
             PriceServiceList = new ObservableCollection<string>(Enum.GetNames(typeof(PriceServices.ServiceNames)));
+            SelectedPriceService = Enum.GetName(typeof(PriceServices.ServiceNames), PriceServices.ServiceNames.Bitfinex);
 
             GetPriceCommand = AsyncCommand.Create(() => GetPrice());
             SaveCommand = new RelayCommand(() => Save());
