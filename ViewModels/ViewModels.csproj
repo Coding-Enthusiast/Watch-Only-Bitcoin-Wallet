@@ -54,10 +54,6 @@
       <Project>{3b31423a-cc27-44bb-9d19-a5da92d0326d}</Project>
       <Name>CommonLibrary</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Models\Models.csproj">
-      <Project>{a4a90329-5662-4e94-86b2-2b71c2e14c85}</Project>
-      <Name>Models</Name>
-    </ProjectReference>
     <ProjectReference Include="..\WalletServices\WalletServices.csproj">
       <Project>{1a172fe1-5923-4c3a-b427-bc68fac05d42}</Project>
       <Name>WalletServices</Name>

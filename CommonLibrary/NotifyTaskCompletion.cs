@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Threading.Tasks;
 
-namespace CommonLibrary
+namespace MVVMLibrary
 {
     /// <summary>
     /// Copied from https://msdn.microsoft.com/en-us/magazine/dn630647.aspx

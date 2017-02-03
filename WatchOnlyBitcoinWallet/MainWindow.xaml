@@ -1,13 +1,11 @@
 ﻿<Window x:Name="windowMain" x:Class="WatchOnlyBitcoinWallet.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="clr-namespace:ViewModels;assembly=ViewModels"
-        DataContext="{DynamicResource MainWindowViewModel}"
+        xmlns:vm="clr-namespace:WatchOnlyBitcoinWallet.ViewModels"
         Title="Watch Only Bitcoin Wallet - Version 2" Height="332" Width="692" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" FontSize="14" Icon="myICO.ico">
-    <Window.Resources>
-        <vm:MainWindowViewModel x:Key="MainWindowViewModel"/>
-        <vm:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
-    </Window.Resources>
+    <Window.DataContext>
+        <vm:MainWindowViewModel/>
+    </Window.DataContext>
     <Window.CommandBindings>
         <CommandBinding Command="New" Executed="About_Click"/>
     </Window.CommandBindings>

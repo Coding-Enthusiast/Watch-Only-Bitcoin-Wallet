@@ -6,7 +6,7 @@ using System.Linq;
 using System.Numerics;
 using System.Security.Cryptography;
 
-namespace CommonLibrary
+namespace MVVMLibrary
 {
     public class ValidatableBase : CommonBase, INotifyDataErrorInfo
     {
