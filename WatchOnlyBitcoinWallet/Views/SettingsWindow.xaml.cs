@@ -10,17 +10,16 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace WatchOnlyBitcoinWallet
+namespace WatchOnlyBitcoinWallet.Views
 {
     /// <summary>
-    /// Interaction logic for SettingsView.xaml
+    /// Interaction logic for SettingsWindow.xaml
     /// </summary>
-    public partial class SettingsView : UserControl
+    public partial class SettingsWindow : Window
     {
-        public SettingsView()
+        public SettingsWindow()
         {
             InitializeComponent();
         }

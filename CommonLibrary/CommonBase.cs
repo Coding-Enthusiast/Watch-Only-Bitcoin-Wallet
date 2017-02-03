@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace CommonLibrary
+namespace MVVMLibrary
 {
     public class CommonBase : INotifyPropertyChanged
     {

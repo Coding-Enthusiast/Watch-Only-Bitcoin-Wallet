@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace CommonLibrary
+namespace MVVMLibrary
 {
     /// <summary>
     /// Copied from https://msdn.microsoft.com/en-us/magazine/dn630647.aspx
