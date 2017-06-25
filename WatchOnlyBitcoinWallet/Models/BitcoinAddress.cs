@@ -1,9 +1,4 @@
 ﻿using MVVMLibrary;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WatchOnlyBitcoinWallet.Models
 {
@@ -55,5 +50,20 @@ namespace WatchOnlyBitcoinWallet.Models
                 }
             }
         }
+
+        private decimal difference;
+        public decimal Difference
+        {
+            get { return difference; }
+            set
+            {
+                if (difference != value)
+                {
+                    difference = value;
+                    RaisePropertyChanged("Difference");
+                }
+            }
+        }
+
     }
 }

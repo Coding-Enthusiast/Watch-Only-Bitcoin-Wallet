@@ -1,9 +1,5 @@
 ﻿using MVVMLibrary;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using WatchOnlyBitcoinWallet.Services;
 
 namespace WatchOnlyBitcoinWallet.Models
 {
@@ -12,5 +8,7 @@ namespace WatchOnlyBitcoinWallet.Models
         public decimal BitcoinPriceInUSD { get; set; }
         public decimal DollarPriceInLocalCurrency { get; set; }
         public string LocalCurrencySymbol { get; set; }
+        public BalanceServiceNames SelectedBalanceApi { get; set; }
+        public PriceServiceNames SelectedPriceApi { get; set; }
     }
 }

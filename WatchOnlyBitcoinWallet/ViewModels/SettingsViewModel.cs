@@ -1,147 +1,159 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using MVVMLibrary;
+using System;
 using System.Collections.ObjectModel;
-using MVVMLibrary;
 using WatchOnlyBitcoinWallet.Models;
 using WatchOnlyBitcoinWallet.Services;
+using WatchOnlyBitcoinWallet.Services.PriceServices;
 
 namespace WatchOnlyBitcoinWallet.ViewModels
 {
-    public class SettingsViewModel : CommonBase
+    public class SettingsViewModel : ViewModelBase
     {
         public SettingsViewModel()
         {
-            Settings = new SettingsModel();
+            BalanceApiList = new ObservableCollection<BalanceServiceNames>((BalanceServiceNames[])Enum.GetValues(typeof(BalanceServiceNames)));
+            PriceApiList = new ObservableCollection<PriceServiceNames>((PriceServiceNames[])Enum.GetValues(typeof(PriceServiceNames)));
 
-            PriceServiceList = new ObservableCollection<string>(Enum.GetNames(typeof(PriceServices.ServiceNames)));
-            SelectedPriceService = Enum.GetName(typeof(PriceServices.ServiceNames), PriceServices.ServiceNames.Bitfinex);
-
-            GetPriceCommand = AsyncCommand.Create(() => GetPrice());
-            SaveCommand = new BindableCommand(() => Save());
+            UpdatePriceCommand = new BindableCommand(UpdatePrice, () => !IsReceiving);
         }
 
-        public IAsyncCommand GetPriceCommand { get; private set; }
-        private async Task GetPrice()
-        {
-            decimal price = await PriceServices.GetPrice(SelectedPriceService);
-            BitcoinPrice = price;
-        }
 
-        public BindableCommand SaveCommand { get; private set; }
-        private void Save()
-        {
-            WalletData.SaveSettings(Settings);
-            IsSaveButtonEnabled = false;
-        }
 
-        private bool isSaveButtonEnabled;
-        public bool IsSaveButtonEnabled
+        /// <summary>
+        /// Indicating an active connection.
+        /// <para/> Used to enable/disable buttons
+        /// </summary>
+        public bool IsReceiving
         {
-            get { return isSaveButtonEnabled; }
+            get { return isReceiving; }
             set
             {
-                if (isSaveButtonEnabled != value)
+                if (SetField(ref isReceiving, value))
                 {
-                    isSaveButtonEnabled = value;
-                    RaisePropertyChanged("IsSaveButtonEnabled");
+                    UpdatePriceCommand.RaiseCanExecuteChanged();
                 }
             }
         }
+        private bool isReceiving;
 
 
-        private ObservableCollection<string> priceServiceList;
-        public ObservableCollection<string> PriceServiceList
-        {
-            get { return priceServiceList; }
-            set
-            {
-                if (priceServiceList != value)
-                {
-                    priceServiceList = value;
-                    RaisePropertyChanged("PriceServiceList");
-                }
-            }
-        }
+        public ObservableCollection<BalanceServiceNames> BalanceApiList { get; set; }
 
-        private string selectedPriceService;
-        public string SelectedPriceService
-        {
-            get { return selectedPriceService; }
-            set
-            {
-                if (selectedPriceService != value)
-                {
-                    selectedPriceService = value;
-                    RaisePropertyChanged("SelectedPriceService");
-                }
-            }
-        }
+        public ObservableCollection<PriceServiceNames> PriceApiList { get; set; }
 
 
         private SettingsModel settings;
         public SettingsModel Settings
         {
             get { return settings; }
+            set { SetField(ref settings, value); }
+        }
+
+
+        public BalanceServiceNames SelectedBalanceApi
+        {
+            get { return Settings.SelectedBalanceApi; }
             set
             {
-                if (settings != value)
+                if (Settings.SelectedBalanceApi != value) // Can't use SetField here because of "ref"
                 {
-                    settings = value;
-                    RaisePropertyChanged("Settings");
-                    IsSaveButtonEnabled = true;
+                    Settings.SelectedBalanceApi = value;
+                    RaisePropertyChanged("SelectedBalanceApi");
                 }
             }
         }
 
+
+        public PriceServiceNames SelectedPriceApi
+        {
+            get { return Settings.SelectedPriceApi; }
+            set
+            {
+                if (Settings.SelectedPriceApi != value)
+                {
+                    Settings.SelectedPriceApi = value;
+                    RaisePropertyChanged("SelectedPriceApi");
+                }
+            }
+        }
+
+
         public decimal BitcoinPrice
         {
-            get
-            {
-                return Settings.BitcoinPriceInUSD;
-            }
+            get { return Settings.BitcoinPriceInUSD; }
             set
             {
                 if (Settings.BitcoinPriceInUSD != value)
                 {
                     Settings.BitcoinPriceInUSD = value;
                     RaisePropertyChanged("BitcoinPrice");
-                    IsSaveButtonEnabled = true;
                 }
             }
         }
 
         public decimal USDPrice
         {
-            get
-            {
-                return Settings.DollarPriceInLocalCurrency;
-            }
+            get { return Settings.DollarPriceInLocalCurrency; }
             set
             {
                 if (Settings.DollarPriceInLocalCurrency != value)
                 {
                     Settings.DollarPriceInLocalCurrency = value;
                     RaisePropertyChanged("USDPrice");
-                    IsSaveButtonEnabled = true;
                 }
             }
         }
 
         public string LocalCurrencySymbol
         {
-            get
-            {
-                return Settings.LocalCurrencySymbol;
-            }
+            get { return Settings.LocalCurrencySymbol; }
             set
             {
                 if (Settings.LocalCurrencySymbol != value)
                 {
                     Settings.LocalCurrencySymbol = value;
                     RaisePropertyChanged("LocalCurrencySymbol");
-                    IsSaveButtonEnabled = true;
                 }
             }
         }
+
+
+        public BindableCommand UpdatePriceCommand { get; private set; }
+        private async void UpdatePrice()
+        {
+            Status = "Fetching Bitcoin Price...";
+            Errors = string.Empty;
+            IsReceiving = true;
+
+            PriceApi api = null;
+            switch (Settings.SelectedPriceApi)
+            {
+                case PriceServiceNames.Bitfinex:
+                    api = new Bitfinex();
+                    break;
+                case PriceServiceNames.Btce:
+                    api = new Btce();
+                    break;
+                default:
+                    api = new Bitfinex();
+                    break;
+            }
+
+            Response<decimal> resp = await api.UpdatePriceAsync();
+            if (resp.Errors.Any())
+            {
+                Errors = resp.Errors.GetErrors();
+                Status = "Encountered an error!";
+            }
+            else
+            {
+                Settings.BitcoinPriceInUSD = resp.Result;
+                RaisePropertyChanged("BitcoinPrice");
+                Status = "Price Update Success!";
+            }
+
+            IsReceiving = false;
+        }
+
     }
 }

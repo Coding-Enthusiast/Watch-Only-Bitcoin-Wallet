@@ -1,159 +1,104 @@
-﻿using System.ComponentModel;
+﻿using MVVMLibrary;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using MVVMLibrary;
+using System.Reflection;
 using WatchOnlyBitcoinWallet.Models;
 using WatchOnlyBitcoinWallet.Services;
+using WatchOnlyBitcoinWallet.Services.BalanceServices;
 
 namespace WatchOnlyBitcoinWallet.ViewModels
 {
-    public class MainWindowViewModel : CommonBase
+    public class MainWindowViewModel : ViewModelBase
     {
         public MainWindowViewModel()
         {
-            AddressList = new BindingList<BitcoinAddress>(WalletData.LoadAddresses());
+            AddressList = new BindingList<BitcoinAddress>(DataManager.ReadFile<List<BitcoinAddress>>(DataManager.FileType.Wallet));
             AddressList.ListChanged += AddressList_ListChanged;
 
-            SettingsInstance = WalletData.LoadSettings();
+            SettingsInstance = DataManager.ReadFile<SettingsModel>(DataManager.FileType.Settings);
 
-            GetBalanceCommand = AsyncCommand.Create(() => GetBalance());
-            SaveCommand = new BindableCommand(() => Save());
+            GetBalanceCommand = new BindableCommand(GetBalance, () => !IsReceiving);
             SettingsCommand = new BindableCommand(() => OpenSettings());
+
+            var ver = Assembly.GetExecutingAssembly().GetName().Version;
+            VersionString = string.Format("Version {0}.{1}.{2}", ver.Major, ver.Minor, ver.Build);
         }
 
 
-        /// <summary>
-        /// List of all available addresses in the wallet.
-        /// </summary>
-        public BindingList<BitcoinAddress> AddressList { get; set; }
 
-        private void AddressList_ListChanged(object sender, ListChangedEventArgs e)
+        void AddressList_ListChanged(object sender, ListChangedEventArgs e)
         {
             if (e.ListChangedType == ListChangedType.ItemChanged)
             {
                 var addrs = (BindingList<BitcoinAddress>)sender;
-                StringBuilder sb = new StringBuilder();
-                foreach (var item in addrs)
+                if (!addrs[e.NewIndex].HasErrors)
                 {
-                    if (item.HasErrors)
-                    {
-                        foreach (var er in item.GetErrors("Address"))
-                        {
-                            sb.Append(er);
-                        }
-                    }
+                    DataManager.WriteFile(AddressList, DataManager.FileType.Wallet);
                 }
-                MessageToDisplay = sb.ToString();
-
-                IsSaveButtonEnabled = (sb.Length != 0) ? false : true;
+            }
+            else if (e.ListChangedType == ListChangedType.ItemDeleted)
+            {
+                DataManager.WriteFile(AddressList, DataManager.FileType.Wallet);
             }
         }
 
-        private string messageToDisplay;
-        public string MessageToDisplay
+
+        /// <summary>
+        /// Indicating an active connection.
+        /// <para/> Used to enable/disable buttons
+        /// </summary>
+        public bool IsReceiving
         {
-            get { return messageToDisplay; }
+            get { return isReceiving; }
             set
             {
-                if (messageToDisplay != value)
+                if (SetField(ref isReceiving, value))
                 {
-                    messageToDisplay = value;
-                    RaisePropertyChanged("MessageToDisplay");
+                    GetBalanceCommand.RaiseCanExecuteChanged();
                 }
             }
         }
+        private bool isReceiving;
+
+        public string VersionString { get; private set; }
+
+
+        public BindingList<BitcoinAddress> AddressList { get; set; }
+
 
         private SettingsModel settingsInstance;
         public SettingsModel SettingsInstance
         {
             get { return settingsInstance; }
-            set
-            {
-                if (settingsInstance != value)
-                {
-                    settingsInstance = value;
-                    RaisePropertyChanged("SettingsInstance");
-                }
-            }
+            set { SetField(ref settingsInstance, value); }
         }
 
-
-        private decimal bitcoinBalance;
         public decimal BitcoinBalance
         {
             get
             {
-                bitcoinBalance = AddressList.Sum(x => (decimal)x.Balance);
-                return bitcoinBalance;
-            }
-            set
-            {
-                if (bitcoinBalance != value)
-                {
-                    bitcoinBalance = value;
-                    RaisePropertyChanged("BitcoinBalance");
-                    RaisePropertyChanged("BitcoinBalanceUSD");
-                    RaisePropertyChanged("BitcoinBalanceLC");
-                }
+                return AddressList.Sum(x => (decimal)x.Balance);
             }
         }
 
-        private decimal bitcoinBalanceUSD;
+        [DependsOnProperty(new string[] { "BitcoinBalance", "SettingsInstance" })]
         public decimal BitcoinBalanceUSD
         {
             get
             {
-                bitcoinBalanceUSD = bitcoinBalance * SettingsInstance.BitcoinPriceInUSD;
-                return bitcoinBalanceUSD;
-            }
-            set
-            {
-                if (bitcoinBalanceUSD != value)
-                {
-                    bitcoinBalanceUSD = value;
-                    RaisePropertyChanged("BitcoinBalanceUSD");
-                }
+                return BitcoinBalance * SettingsInstance.BitcoinPriceInUSD;
             }
         }
 
-        private decimal bitcoinBalanceLC;
+        [DependsOnProperty(new string[] { "BitcoinBalance", "SettingsInstance" })]
         public decimal BitcoinBalanceLC
         {
             get
             {
-                bitcoinBalanceLC = bitcoinBalanceUSD * SettingsInstance.DollarPriceInLocalCurrency;
-                return bitcoinBalanceLC;
-            }
-            set
-            {
-                if (bitcoinBalanceLC != value)
-                {
-                    bitcoinBalanceLC = value;
-                    RaisePropertyChanged("BitcoinBalanceLC");
-                }
+                return BitcoinBalanceUSD * SettingsInstance.DollarPriceInLocalCurrency;
             }
         }
-
-        private string localCurrencySymbol;
-        public string LocalCurrencySymbol
-        {
-            get
-            {
-                localCurrencySymbol = SettingsInstance.LocalCurrencySymbol;
-                return localCurrencySymbol;
-            }
-            set
-            {
-                if (localCurrencySymbol != value)
-                {
-                    localCurrencySymbol = value;
-                    RaisePropertyChanged("LocalCurrencySymbol");
-                }
-            }
-        }
-
 
 
         public BindableCommand SettingsCommand { get; private set; }
@@ -163,41 +108,47 @@ namespace WatchOnlyBitcoinWallet.ViewModels
             SettingsViewModel vm = new SettingsViewModel();
             vm.Settings = SettingsInstance;
             winManager.Show(vm);
+            RaisePropertyChanged("SettingsInstance");
+            DataManager.WriteFile(SettingsInstance, DataManager.FileType.Settings);
         }
 
 
-        public IAsyncCommand GetBalanceCommand { get; private set; }
-        private async Task GetBalance()
+        public BindableCommand GetBalanceCommand { get; private set; }
+        private async void GetBalance()
         {
-            bool isChanged = await BlockchainInfoService.GetBalace(AddressList.ToList());
-            if (isChanged)
+            Status = "Updating Balances...";
+            Errors = string.Empty;
+            IsReceiving = true;
+
+            BalanceApi api = null;
+            switch (SettingsInstance.SelectedBalanceApi)
             {
+                case BalanceServiceNames.BlockchainInfo:
+                    api = new BlockchainInfo();
+                    break;
+                case BalanceServiceNames.Blockr:
+                    api = new Blockr();
+                    break;
+                default:
+                    api = new BlockchainInfo();
+                    break;
+            }
+
+            Response resp = await api.UpdateBalancesAsync(AddressList.ToList());
+            if (resp.Errors.Any())
+            {
+                Errors = resp.Errors.GetErrors();
+                Status = "Encountered an error!";
+            }
+            else
+            {
+                DataManager.WriteFile(AddressList, DataManager.FileType.Wallet);
                 RaisePropertyChanged("BitcoinBalance");
-                RaisePropertyChanged("BitcoinBalanceUSD");
-                RaisePropertyChanged("BitcoinBalanceLC");
+                Status = "Balance Update Success!";
             }
+
+            IsReceiving = false;
         }
 
-
-        public BindableCommand SaveCommand { get; private set; }
-        private void Save()
-        {
-            WalletData.Save(AddressList.ToList());
-            IsSaveButtonEnabled = false;
-        }
-
-        private bool isSaveButtonEnabled;
-        public bool IsSaveButtonEnabled
-        {
-            get { return isSaveButtonEnabled; }
-            set
-            {
-                if (isSaveButtonEnabled != value)
-                {
-                    isSaveButtonEnabled = value;
-                    RaisePropertyChanged("IsSaveButtonEnabled");
-                }
-            }
-        }
     }
 }

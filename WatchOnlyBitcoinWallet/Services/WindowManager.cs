@@ -1,6 +1,5 @@
-﻿using System.Windows;
-
-using MVVMLibrary;
+﻿using MVVMLibrary;
+using System.Windows;
 using WatchOnlyBitcoinWallet.Views;
 
 namespace WatchOnlyBitcoinWallet.Services

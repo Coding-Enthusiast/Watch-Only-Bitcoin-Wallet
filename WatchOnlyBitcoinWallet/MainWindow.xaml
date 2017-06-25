@@ -2,54 +2,98 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="clr-namespace:WatchOnlyBitcoinWallet.ViewModels"
+        xmlns:mvvm="clr-namespace:MVVMLibrary;assembly=MVVMLibrary"
         Title="Watch Only Bitcoin Wallet - Version 2" Height="332" Width="692" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" FontSize="14" Icon="myICO.ico">
     <Window.DataContext>
         <vm:MainWindowViewModel/>
     </Window.DataContext>
+
+    <Window.Resources>
+        <mvvm:BooleanToVisibilityConverter x:Key="visibilityConverter"/>
+    </Window.Resources>
+
     <Window.CommandBindings>
         <CommandBinding Command="New" Executed="About_Click"/>
     </Window.CommandBindings>
+
     <Window.InputBindings>
         <KeyBinding Key="S" Modifiers="Control" Command="{Binding SaveCommand, Mode=OneWay}" />
         <KeyBinding Key="F2" Command="{Binding SettingsCommand}"/>
         <KeyBinding Key="F1" Command="New"/>
     </Window.InputBindings>
+
     <Grid>
-        <Menu Height="30" VerticalAlignment="Top" Margin="0,0,0,226" FontSize="14">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <Menu Height="25" FontSize="14" Grid.Row="0">
             <MenuItem Header="_Options">
-                <MenuItem Header="_Save" IsEnabled="{Binding IsSaveButtonEnabled}" Command="{Binding SaveCommand, Mode=OneWay}" InputGestureText="Ctrl+S"/>
-                <MenuItem Header="Se_ttings" InputGestureText="F2" Command="{Binding SettingsCommand, Mode=OneWay}"/>
+                <MenuItem Header="_Settings" InputGestureText="F2" Command="{Binding SettingsCommand, Mode=OneWay}"/>
                 <MenuItem Header="_About" Click="About_Click" InputGestureText="F1"/>
                 <Separator />
                 <MenuItem Header="_Exit" Click="Exit_Click" InputGestureText="Alt+F4"/>
             </MenuItem>
         </Menu>
 
-        <DataGrid HorizontalAlignment="Left" Margin="10,35,0,0" VerticalAlignment="Top" Height="249" Width="532" ItemsSource="{Binding AddressList, Mode=TwoWay}" AutoGenerateColumns="False" >
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Name" Binding="{Binding Name, Mode=TwoWay}"/>
-                <DataGridTextColumn Header="Address" Binding="{Binding Address, Mode=TwoWay, ValidatesOnNotifyDataErrors=True}"/>
-                <DataGridTextColumn Header="Balance" Binding="{Binding Balance}" IsReadOnly="True"/>
-            </DataGrid.Columns>
-        </DataGrid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="530"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-        <Button Content="Get Balances" HorizontalAlignment="Left" Margin="547,35,0,0" VerticalAlignment="Top" Width="98" Height="35" Command="{Binding GetBalanceCommand, Mode=OneWay}"/>
+            <DataGrid ItemsSource="{Binding AddressList}" AutoGenerateColumns="False" Margin="5" Grid.Column="0">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name, Mode=TwoWay}"/>
+                    <DataGridTextColumn Header="Address" Binding="{Binding Address, Mode=TwoWay, ValidatesOnNotifyDataErrors=True}"/>
+                    <DataGridTemplateColumn Header="Balance">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Balance, StringFormat=\{0:N8\}}" ToolTip="{Binding Difference, StringFormat=\{0:N8\}}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
 
-        <TextBlock HorizontalAlignment="Left" Margin="547,78,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="฿"/>
-        <TextBlock HorizontalAlignment="Left" Margin="560,78,0,0" TextWrapping="Wrap" Text="{Binding BitcoinBalance}" VerticalAlignment="Top"/>
+            <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
 
-        <TextBlock HorizontalAlignment="Left" Margin="547,102,0,0" TextWrapping="Wrap" Text="$" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="560,102,0,0" TextWrapping="Wrap" Text="{Binding BitcoinBalanceUSD, StringFormat=\{0:N\}}" VerticalAlignment="Top"/>
+                <Button Content="Update Balances" Command="{Binding GetBalanceCommand}" Height="35" Margin="5" Grid.ColumnSpan="2" Grid.Row="0"/>
 
-        <TextBlock HorizontalAlignment="Left" Margin="547,126,0,0" TextWrapping="Wrap" Text="{Binding LocalCurrencySymbol}" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="560,126,0,0" TextWrapping="Wrap" Text="{Binding BitcoinBalanceLC, StringFormat=\{0:N0\}}" VerticalAlignment="Top"/>
+                <TextBlock Text="฿  " Grid.Column="0" Grid.Row="1"/>
+                <TextBlock Text="$  " Grid.Column="0" Grid.Row="2"/>
+                <TextBlock Text="{Binding SettingsInstance.LocalCurrencySymbol}" Grid.Column="0" Grid.Row="3"/>
 
-        <TextBox HorizontalAlignment="Left" Height="100" Margin="547,150,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Text="{Binding MessageToDisplay}" VerticalScrollBarVisibility="Auto" IsReadOnly="True"/>
-        
-        <TextBox x:Name="txtVersion" HorizontalAlignment="Left" Height="29" Margin="547,255,0,0" TextWrapping="Wrap" Text="Ver. 0.0.0.0" VerticalAlignment="Top" Width="116" FontWeight="Bold" TextAlignment="Center" Background="#FFADD8EC" IsUndoEnabled="False" IsReadOnly="True" FontSize="14" Focusable="False" IsTabStop="False" Cursor="Pen" FontFamily="Comic Sans MS">
-            <TextBox.Effect>
-                <DropShadowEffect/>
-            </TextBox.Effect>
-        </TextBox>
+                <TextBlock Text="{Binding BitcoinBalance, Mode=OneWay, StringFormat=\{0:N8\}}" Grid.Column="1" Grid.Row="1"/>
+                <TextBlock Text="{Binding BitcoinBalanceUSD, Mode=OneWay, StringFormat=\{0:N2\}}" Grid.Column="1" Grid.Row="2"/>
+                <TextBlock Text="{Binding BitcoinBalanceLC, Mode=OneWay, StringFormat=\{0:N0\}}" Grid.Column="1" Grid.Row="3"/>
+
+                <TextBlock Text="{Binding Errors}" Visibility="{Binding IsErrorMsgVisible, Converter={StaticResource visibilityConverter}}" TextWrapping="Wrap" Background="#FFECB1B1" Grid.ColumnSpan="2" Grid.Row="4" Margin="0,5,5,5"/>
+
+                <TextBox Text="{Binding VersionString}" FontWeight="Bold" TextAlignment="Center" Background="#FFADD8EC" IsReadOnly="True" Focusable="False" IsTabStop="False" Cursor="Pen" FontFamily="Comic Sans MS" Margin="5" Grid.ColumnSpan="2" Grid.Row="5">
+                    <TextBox.Effect>
+                        <DropShadowEffect/>
+                    </TextBox.Effect>
+                </TextBox>
+            </Grid>
+        </Grid>
+
+        <StatusBar Grid.Row="2">
+            <TextBlock Text="{Binding Status}" FontSize="15" FontFamily="Comi"/>
+        </StatusBar>
     </Grid>
 </Window>

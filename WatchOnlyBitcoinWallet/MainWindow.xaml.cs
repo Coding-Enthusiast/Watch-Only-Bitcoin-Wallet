@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 
-
 namespace WatchOnlyBitcoinWallet
 {
     /// <summary>
@@ -11,9 +10,6 @@ namespace WatchOnlyBitcoinWallet
         public MainWindow()
         {
             InitializeComponent();
-
-            var ver = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-            txtVersion.Text = string.Format("Version {0}.{1}.{2}", ver.Major, ver.Minor, ver.Build);
         }
 
         private void About_Click(object sender, RoutedEventArgs e)

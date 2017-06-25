@@ -5,11 +5,18 @@ using System.Windows.Data;
 
 namespace MVVMLibrary
 {
-    public sealed class NullToVisibilityConverter : IValueConverter
+    public class BooleanToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value == null ? Visibility.Collapsed : Visibility.Visible;
+            if ((bool)value)
+            {
+                return Visibility.Visible;
+            }
+            else
+            {
+                return Visibility.Hidden;
+            }
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
