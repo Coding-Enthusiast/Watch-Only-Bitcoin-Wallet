@@ -64,7 +64,7 @@
     <Compile Include="Models\SettingsModel.cs" />
     <Compile Include="Services\Api.cs" />
     <Compile Include="Services\BalanceServices\BlockchainInfo.cs" />
-    <Compile Include="Services\BalanceServices\Blockr.cs" />
+    <Compile Include="Services\BalanceServices\BlockExplorer.cs" />
     <Compile Include="Services\DataManager.cs" />
     <Compile Include="Services\ErrorCollection.cs" />
     <Compile Include="Services\PriceServices\Bitfinex.cs" />

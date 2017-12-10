@@ -15,7 +15,7 @@ namespace WatchOnlyBitcoinWallet.Services
     public enum BalanceServiceNames
     {
         BlockchainInfo,
-        Blockr,
+        BlockExplorer,
     }
 
     public abstract class Api

@@ -126,8 +126,8 @@ namespace WatchOnlyBitcoinWallet.ViewModels
                 case BalanceServiceNames.BlockchainInfo:
                     api = new BlockchainInfo();
                     break;
-                case BalanceServiceNames.Blockr:
-                    api = new Blockr();
+                case BalanceServiceNames.BlockExplorer:
+                    api = new BlockExplorer();
                     break;
                 default:
                     api = new BlockchainInfo();
