@@ -10,6 +10,7 @@
 
     <Window.Resources>
         <mvvm:BooleanToVisibilityConverter x:Key="visibilityConverter"/>
+        <mvvm:NumberToColorConverter x:Key="numToColorConverter"/>
     </Window.Resources>
 
     <Window.CommandBindings>
@@ -51,7 +52,7 @@
                     <DataGridTemplateColumn Header="Balance">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding Balance, StringFormat=\{0:N8\}}" ToolTip="{Binding Difference, StringFormat=\{0:N8\}}"/>
+                                <TextBlock Text="{Binding Balance, StringFormat=\{0:N8\}}" ToolTip="{Binding Difference, StringFormat=\{0:N8\}}" Background="{Binding Difference, Converter={StaticResource numToColorConverter}}"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
