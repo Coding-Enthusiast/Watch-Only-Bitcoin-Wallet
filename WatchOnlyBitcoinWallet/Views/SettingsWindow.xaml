@@ -42,8 +42,10 @@
         <ComboBox ItemsSource="{Binding BalanceApiList}" SelectedItem="{Binding Settings.SelectedBalanceApi, Mode=TwoWay}" Grid.Column="1" Grid.Row="3" Margin="3"/>
         <ComboBox ItemsSource="{Binding PriceApiList}" SelectedItem="{Binding SelectedPriceApi}" Grid.Column="1" Grid.Row="4" Margin="3"/>
 
-        <TextBlock Text="{Binding Errors}" Visibility="{Binding IsErrorMsgVisible, Converter={StaticResource visibilityConverter}}" MaxHeight="100" TextWrapping="Wrap" Background="#FFECB1B1" Grid.ColumnSpan="2" Grid.Row="5"/>
-
+        <ScrollViewer Visibility="{Binding IsErrorMsgVisible, Converter={StaticResource visibilityConverter}}" MaxHeight="100" Margin="3,0,3,3" Grid.ColumnSpan="2" Grid.Row="5">
+            <TextBlock Text="{Binding Errors}" Visibility="{Binding IsErrorMsgVisible, Converter={StaticResource visibilityConverter}}" TextWrapping="Wrap" Background="#FFECB1B1"/>
+        </ScrollViewer>
+        
         <StatusBar Grid.Row="6" Grid.ColumnSpan="2">
             <TextBlock Text="{Binding Status}" FontSize="15" FontFamily="Comi"/>
         </StatusBar>

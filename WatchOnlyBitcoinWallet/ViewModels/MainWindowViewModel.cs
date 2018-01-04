@@ -1,5 +1,6 @@
 ﻿using MVVMLibrary;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
@@ -19,7 +20,8 @@ namespace WatchOnlyBitcoinWallet.ViewModels
             SettingsInstance = DataManager.ReadFile<SettingsModel>(DataManager.FileType.Settings);
 
             GetBalanceCommand = new BindableCommand(GetBalance, () => !IsReceiving);
-            SettingsCommand = new BindableCommand(() => OpenSettings());
+            SettingsCommand = new BindableCommand(OpenSettings);
+            ForkBalanceCommand = new BindableCommand(ForkBalance);
 
             var ver = Assembly.GetExecutingAssembly().GetName().Version;
             VersionString = string.Format("Version {0}.{1}.{2}", ver.Major, ver.Minor, ver.Build);
@@ -113,6 +115,16 @@ namespace WatchOnlyBitcoinWallet.ViewModels
         }
 
 
+        public BindableCommand ForkBalanceCommand { get; private set; }
+        private void ForkBalance()
+        {
+            IWindowManager winManager = new ForkBalanceWindowManager();
+            ForkBalanceViewModel vm = new ForkBalanceViewModel();
+            vm.AddressList = new ObservableCollection<BitcoinAddress>(AddressList);
+            winManager.Show(vm);
+        }
+
+
         public BindableCommand GetBalanceCommand { get; private set; }
         private async void GetBalance()
         {
@@ -128,6 +140,9 @@ namespace WatchOnlyBitcoinWallet.ViewModels
                     break;
                 case BalanceServiceNames.BlockExplorer:
                     api = new BlockExplorer();
+                    break;
+                case BalanceServiceNames.BlockCypher:
+                    api = new BlockCypher();
                     break;
                 default:
                     api = new BlockchainInfo();
