@@ -1,24 +1,19 @@
 ﻿using MVVMLibrary;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace WatchOnlyBitcoinWallet.Models
 {
     public class BitcoinAddress : ValidatableBase
     {
+        private string name;
         /// <summary>
         /// Name acts as a tag for the address
         /// </summary>
-        private string name;
         public string Name
         {
             get { return name; }
-            set
-            {
-                if (name != value)
-                {
-                    name = value;
-                    RaisePropertyChanged("Name");
-                }
-            }
+            set { SetField(ref name, value); }
         }
 
         private string address;
@@ -27,12 +22,9 @@ namespace WatchOnlyBitcoinWallet.Models
             get { return address; }
             set
             {
-                if (address != value)
+                if (SetField(ref address, value))
                 {
-                    address = value;
-                    // Check to see if input is a valid bitcoin address
                     Validate(value);
-                    RaisePropertyChanged("Address");
                 }
             }
         }
@@ -41,29 +33,30 @@ namespace WatchOnlyBitcoinWallet.Models
         public decimal Balance
         {
             get { return balance; }
-            set
-            {
-                if (balance != value)
-                {
-                    balance = value;
-                    RaisePropertyChanged("Balance");
-                }
-            }
+            set { SetField(ref balance, value); }
         }
 
         private decimal difference;
+        [JsonIgnore]
         public decimal Difference
         {
             get { return difference; }
-            set
-            {
-                if (difference != value)
-                {
-                    difference = value;
-                    RaisePropertyChanged("Difference");
-                }
-            }
+            set { SetField(ref difference, value); }
         }
+
+        private decimal forkBalance;
+        /// <summary>
+        /// Total balance that was available by the time of fork
+        /// </summary>
+        [JsonIgnore]
+        public decimal ForkBalance
+        {
+            get { return forkBalance; }
+            set { SetField(ref forkBalance, value); }
+        }
+
+
+        public List<Transaction> TransactionList { get; set; }
 
     }
 }

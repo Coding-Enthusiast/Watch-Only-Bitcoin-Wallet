@@ -62,8 +62,10 @@
     </Compile>
     <Compile Include="Models\BitcoinAddress.cs" />
     <Compile Include="Models\SettingsModel.cs" />
+    <Compile Include="Models\Transaction.cs" />
     <Compile Include="Services\Api.cs" />
     <Compile Include="Services\BalanceServices\BlockchainInfo.cs" />
+    <Compile Include="Services\BalanceServices\BlockCypher.cs" />
     <Compile Include="Services\BalanceServices\BlockExplorer.cs" />
     <Compile Include="Services\DataManager.cs" />
     <Compile Include="Services\ErrorCollection.cs" />
@@ -71,8 +73,12 @@
     <Compile Include="Services\PriceServices\Btce.cs" />
     <Compile Include="Services\Response.cs" />
     <Compile Include="Services\WindowManager.cs" />
+    <Compile Include="ViewModels\ForkBalanceViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
+    <Compile Include="Views\ForkBalanceWindow.xaml.cs">
+      <DependentUpon>ForkBalanceWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
@@ -92,6 +98,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\ForkBalanceWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\SettingsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

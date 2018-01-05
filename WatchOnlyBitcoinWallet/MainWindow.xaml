@@ -20,6 +20,7 @@
     <Window.InputBindings>
         <KeyBinding Key="S" Modifiers="Control" Command="{Binding SaveCommand, Mode=OneWay}" />
         <KeyBinding Key="F2" Command="{Binding SettingsCommand}"/>
+        <KeyBinding Key="F3" Command="{Binding ForkBalanceCommand}"/>
         <KeyBinding Key="F1" Command="New"/>
     </Window.InputBindings>
 
@@ -33,6 +34,7 @@
         <Menu Height="25" FontSize="14" Grid.Row="0">
             <MenuItem Header="_Options">
                 <MenuItem Header="_Settings" InputGestureText="F2" Command="{Binding SettingsCommand, Mode=OneWay}"/>
+                <MenuItem Header="_Fork Balances" InputGestureText="F3" Command="{Binding ForkBalanceCommand,Mode=OneWay}"/>
                 <MenuItem Header="_About" Click="About_Click" InputGestureText="F1"/>
                 <Separator />
                 <MenuItem Header="_Exit" Click="Exit_Click" InputGestureText="Alt+F4"/>
@@ -83,7 +85,9 @@
                 <TextBlock Text="{Binding BitcoinBalanceUSD, Mode=OneWay, StringFormat=\{0:N2\}}" Grid.Column="1" Grid.Row="2"/>
                 <TextBlock Text="{Binding BitcoinBalanceLC, Mode=OneWay, StringFormat=\{0:N0\}}" Grid.Column="1" Grid.Row="3"/>
 
-                <TextBlock Text="{Binding Errors}" Visibility="{Binding IsErrorMsgVisible, Converter={StaticResource visibilityConverter}}" TextWrapping="Wrap" Background="#FFECB1B1" Grid.ColumnSpan="2" Grid.Row="4" Margin="0,5,5,5"/>
+                <ScrollViewer Visibility="{Binding IsErrorMsgVisible, Converter={StaticResource visibilityConverter}}" Margin="0,5,5,5" Grid.ColumnSpan="2" Grid.Row="4">
+                    <TextBlock Text="{Binding Errors}" Visibility="{Binding IsErrorMsgVisible, Converter={StaticResource visibilityConverter}}" TextWrapping="Wrap" Background="#FFECB1B1"/>
+                </ScrollViewer>
 
                 <TextBox Text="{Binding VersionString}" FontWeight="Bold" TextAlignment="Center" Background="#FFADD8EC" IsReadOnly="True" Focusable="False" IsTabStop="False" Cursor="Pen" FontFamily="Comic Sans MS" Margin="5" Grid.ColumnSpan="2" Grid.Row="5">
                     <TextBox.Effect>

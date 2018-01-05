@@ -16,6 +16,7 @@ namespace WatchOnlyBitcoinWallet.Services
     {
         BlockchainInfo,
         BlockExplorer,
+        BlockCypher
     }
 
     public abstract class Api
@@ -48,5 +49,9 @@ namespace WatchOnlyBitcoinWallet.Services
     public abstract class BalanceApi : Api
     {
         public abstract Task<Response> UpdateBalancesAsync(List<BitcoinAddress> addrList);
+
+        public abstract Task<Response> UpdateTransactionListAsync(List<BitcoinAddress> addrList);
+
+        internal decimal Satoshi = 0.00000001m;
     }
 }

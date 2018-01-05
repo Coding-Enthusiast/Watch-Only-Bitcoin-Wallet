@@ -13,13 +13,12 @@ namespace WatchOnlyBitcoinWallet.Services.BalanceServices
 
             using (HttpClient client = new HttpClient())
             {
-                decimal satoshi = 0.00000001m;
                 foreach (var addr in addrList)
                 {
                     try
                     {
                         string result = await client.GetStringAsync("https://blockexplorer.com/api/addr/" + addr.Address + "/balance");
-                        decimal bal = int.Parse(result) * satoshi;
+                        decimal bal = int.Parse(result) * Satoshi;
                         addr.Difference = bal - addr.Balance;
                         addr.Balance = bal;
                     }
@@ -34,5 +33,11 @@ namespace WatchOnlyBitcoinWallet.Services.BalanceServices
 
             return resp;
         }
+
+        public override Task<Response> UpdateTransactionListAsync(List<Models.BitcoinAddress> addrList)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

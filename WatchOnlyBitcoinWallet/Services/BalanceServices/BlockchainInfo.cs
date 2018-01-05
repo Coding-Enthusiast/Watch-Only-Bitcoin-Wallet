@@ -19,12 +19,17 @@ namespace WatchOnlyBitcoinWallet.Services.BalanceServices
                     resp.Errors.AddRange(apiResp.Errors);
                     break;
                 }
-                decimal satoshi = 0.00000001m;
-                decimal bal = (int)apiResp.Result["final_balance"] * satoshi;
+                decimal bal = (int)apiResp.Result["final_balance"] * Satoshi;
                 addr.Difference = bal - addr.Balance;
                 addr.Balance = bal;
             }
             return resp;
         }
+
+        public override Task<Response> UpdateTransactionListAsync(List<BitcoinAddress> addrList)
+        {
+            throw new System.NotImplementedException();
+        }
+
     }
 }
