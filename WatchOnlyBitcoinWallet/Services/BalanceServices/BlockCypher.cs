@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using WatchOnlyBitcoinWallet.Models;
@@ -19,7 +20,7 @@ namespace WatchOnlyBitcoinWallet.Services.BalanceServices
                     resp.Errors.AddRange(apiResp.Errors);
                     break;
                 }
-                decimal bal = (int)apiResp.Result["final_balance"] * Satoshi;
+                decimal bal = (Int64)apiResp.Result["final_balance"] * Satoshi;
                 addr.Difference = bal - addr.Balance;
                 addr.Balance = bal;
             }

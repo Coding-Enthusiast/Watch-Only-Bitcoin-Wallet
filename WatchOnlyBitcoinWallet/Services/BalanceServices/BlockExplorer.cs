@@ -18,7 +18,7 @@ namespace WatchOnlyBitcoinWallet.Services.BalanceServices
                     try
                     {
                         string result = await client.GetStringAsync("https://blockexplorer.com/api/addr/" + addr.Address + "/balance");
-                        decimal bal = int.Parse(result) * Satoshi;
+                        decimal bal = Int64.Parse(result) * Satoshi;
                         addr.Difference = bal - addr.Balance;
                         addr.Balance = bal;
                     }
