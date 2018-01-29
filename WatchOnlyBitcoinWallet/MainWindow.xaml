@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="clr-namespace:WatchOnlyBitcoinWallet.ViewModels"
         xmlns:mvvm="clr-namespace:MVVMLibrary;assembly=MVVMLibrary"
-        Title="Watch Only Bitcoin Wallet - Version 2" Height="332" Width="692" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" FontSize="14" Icon="myICO.ico">
+        Title="Watch Only Bitcoin Wallet - Version 3" Height="332" Width="692" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" FontSize="14" Icon="myICO.ico">
     <Window.DataContext>
         <vm:MainWindowViewModel/>
     </Window.DataContext>
