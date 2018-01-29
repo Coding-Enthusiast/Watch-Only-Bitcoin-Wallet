@@ -128,6 +128,11 @@ namespace WatchOnlyBitcoinWallet.ViewModels
         public BindableCommand GetBalanceCommand { get; private set; }
         private async void GetBalance()
         {
+            if (!AddressList.ToList().TrueForAll(x => x.HasErrors))
+            {
+                Errors = "Fix the errors in addresses first!";
+                return;
+            }
             Status = "Updating Balances...";
             Errors = string.Empty;
             IsReceiving = true;
@@ -143,6 +148,9 @@ namespace WatchOnlyBitcoinWallet.ViewModels
                     break;
                 case BalanceServiceNames.BlockCypher:
                     api = new BlockCypher();
+                    break;
+                case BalanceServiceNames.Blockonomics:
+                    api = new Blockonomics();
                     break;
                 default:
                     api = new BlockchainInfo();
