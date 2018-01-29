@@ -4,12 +4,12 @@
 **Packages needed:** Newtonsoft.Json
 
 This is a simple open source tool created to help keep track of bitcoin addresses and their balances in a light application.
-![ScreenShot](https://i.imgur.com/5qsnMyz.jpg)
+![ScreenShot](https://i.imgur.com/013QHQ0.jpg)
 
 
 ## Features
 1. Capable of holding multiple bitcoin addresses with tags, address and their balances.
-2. Checking each bitcoin address to be correct with base58encoding.
+2. Validating each address with Base58_encoding and new Bech32 format for Segregated Witness.
 3. Using a grid (like excel) to show the list which makes it easy to add/edit/remove items.
 4. Using diffirent block explorer API services to update balances (blockchain.info, blockexplorer, blockcypher).
 5. See the total bitcoin amount in BTC, USD and user defined local currency.
@@ -32,6 +32,7 @@ Then review the code and leave your feedback.
 
 **Wanna help more?**
 
-[Donate: 1Q9swRQuwhTtjZZ2yguFWk7m7pszknkWyk](bitcoin:1Q9swRQuwhTtjZZ2yguFWk7m7pszknkWyk)
+[Donate: 1Q9swRQuwhTtjZZ2yguFWk7m7pszknkWyk](bitcoin:1Q9swRQuwhTtjZZ2yguFWk7m7pszknkWyk)  
+[SegWit: bc1q3n5t9gv40ayq68nwf0yth49dt5c799wpld376s](bitcoin:bc1q3n5t9gv40ayq68nwf0yth49dt5c799wpld376s)
 
-![QR](https://i.imgur.com/oz9UvFM.png)
+![QR](https://i.imgur.com/oz9UvFM.png)  ![QR](https://i.imgur.com/UMGQ2Ck.jpg)
