@@ -26,12 +26,12 @@ namespace BitcoinLibraryTests
 
             foreach (var addr in correctAddresses)
             {
-                Assert.AreEqual(true, Base58.Verify(addr));
+                Assert.AreEqual(true, Base58.Verify(addr).IsVerified);
             }
 
             foreach (var addr in incorrectAddresses)
             {
-                Assert.AreEqual(false, Base58.Verify(addr));
+                Assert.AreEqual(false, Base58.Verify(addr).IsVerified);
             }
         }
 
