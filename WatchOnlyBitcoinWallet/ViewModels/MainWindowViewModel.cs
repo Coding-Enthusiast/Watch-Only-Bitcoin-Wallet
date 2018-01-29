@@ -33,8 +33,12 @@ namespace WatchOnlyBitcoinWallet.ViewModels
         {
             if (e.ListChangedType == ListChangedType.ItemChanged)
             {
-                var addrs = (BindingList<BitcoinAddress>)sender;
-                if (!addrs[e.NewIndex].HasErrors)
+                BitcoinAddress addr = ((BindingList<BitcoinAddress>)sender)[e.NewIndex];
+                if (addr.Address != null)
+                {
+                    addr.Validate(addr.Address);
+                }
+                if (!addr.HasErrors)
                 {
                     DataManager.WriteFile(AddressList, DataManager.FileType.Wallet);
                 }
@@ -128,6 +132,11 @@ namespace WatchOnlyBitcoinWallet.ViewModels
         public BindableCommand GetBalanceCommand { get; private set; }
         private async void GetBalance()
         {
+            if (!AddressList.ToList().TrueForAll(x => !x.HasErrors))
+            {
+                Errors = "Fix the errors in addresses first!";
+                return;
+            }
             Status = "Updating Balances...";
             Errors = string.Empty;
             IsReceiving = true;
@@ -144,22 +153,58 @@ namespace WatchOnlyBitcoinWallet.ViewModels
                 case BalanceServiceNames.BlockCypher:
                     api = new BlockCypher();
                     break;
+                case BalanceServiceNames.Blockonomics:
+                    api = new Blockonomics();
+                    break;
                 default:
                     api = new BlockchainInfo();
                     break;
             }
 
-            Response resp = await api.UpdateBalancesAsync(AddressList.ToList());
-            if (resp.Errors.Any())
+            // Not all exchanges support Bech32 addresses!
+            // The following "if" is to solve that.
+            bool hasSegWit = AddressList.Any(x => x.Address.StartsWith("bc1", System.StringComparison.InvariantCultureIgnoreCase));
+            if (hasSegWit && !SettingsInstance.SelectedBalanceApi.Equals(BalanceServiceNames.Blockonomics))
             {
-                Errors = resp.Errors.GetErrors();
-                Status = "Encountered an error!";
+                BalanceApi segApi = new Blockonomics();
+                List<BitcoinAddress> legacyAddrs = new List<BitcoinAddress>(AddressList.TakeWhile(x =>
+                    !x.Address.StartsWith("bc1", System.StringComparison.OrdinalIgnoreCase)));
+                List<BitcoinAddress> segWitAddrs = new List<BitcoinAddress>(AddressList.Where(x =>
+                    x.Address.StartsWith("bc1", System.StringComparison.OrdinalIgnoreCase)));
+
+                Response respSW = await segApi.UpdateBalancesAsync(segWitAddrs);
+                if (respSW.Errors.Any())
+                {
+                    Errors = "SegWit API error: " + respSW.Errors.GetErrors();
+                    Status = "Error in SegWit API! Continue updating legacy balances...";
+                }
+                Response resp = await api.UpdateBalancesAsync(legacyAddrs);
+                if (resp.Errors.Any())
+                {
+                    Errors = resp.Errors.GetErrors();
+                    Status = "Encountered an error!";
+                }
+                else
+                {
+                    DataManager.WriteFile(AddressList, DataManager.FileType.Wallet);
+                    RaisePropertyChanged("BitcoinBalance");
+                    Status = "Balance Update Success!";
+                }
             }
             else
             {
-                DataManager.WriteFile(AddressList, DataManager.FileType.Wallet);
-                RaisePropertyChanged("BitcoinBalance");
-                Status = "Balance Update Success!";
+                Response resp = await api.UpdateBalancesAsync(AddressList.ToList());
+                if (resp.Errors.Any())
+                {
+                    Errors = resp.Errors.GetErrors();
+                    Status = "Encountered an error!";
+                }
+                else
+                {
+                    DataManager.WriteFile(AddressList, DataManager.FileType.Wallet);
+                    RaisePropertyChanged("BitcoinBalance");
+                    Status = "Balance Update Success!";
+                }
             }
 
             IsReceiving = false;

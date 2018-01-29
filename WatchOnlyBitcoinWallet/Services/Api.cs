@@ -16,7 +16,8 @@ namespace WatchOnlyBitcoinWallet.Services
     {
         BlockchainInfo,
         BlockExplorer,
-        BlockCypher
+        BlockCypher,
+        Blockonomics
     }
 
     public abstract class Api
