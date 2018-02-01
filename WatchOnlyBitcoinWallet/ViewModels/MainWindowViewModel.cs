@@ -124,7 +124,8 @@ namespace WatchOnlyBitcoinWallet.ViewModels
         {
             IWindowManager winManager = new ForkBalanceWindowManager();
             ForkBalanceViewModel vm = new ForkBalanceViewModel();
-            vm.AddressList = new ObservableCollection<BitcoinAddress>(AddressList);
+            vm.AddressList = new ObservableCollection<BitcoinAddress>(AddressList.Where(x =>
+                    !x.Address.StartsWith("bc1", System.StringComparison.OrdinalIgnoreCase)));
             winManager.Show(vm);
         }
 
@@ -167,7 +168,7 @@ namespace WatchOnlyBitcoinWallet.ViewModels
             if (hasSegWit && !SettingsInstance.SelectedBalanceApi.Equals(BalanceServiceNames.Blockonomics))
             {
                 BalanceApi segApi = new Blockonomics();
-                List<BitcoinAddress> legacyAddrs = new List<BitcoinAddress>(AddressList.TakeWhile(x =>
+                List<BitcoinAddress> legacyAddrs = new List<BitcoinAddress>(AddressList.Where(x =>
                     !x.Address.StartsWith("bc1", System.StringComparison.OrdinalIgnoreCase)));
                 List<BitcoinAddress> segWitAddrs = new List<BitcoinAddress>(AddressList.Where(x =>
                     x.Address.StartsWith("bc1", System.StringComparison.OrdinalIgnoreCase)));
