@@ -124,8 +124,7 @@ namespace WatchOnlyBitcoinWallet.ViewModels
         {
             IWindowManager winManager = new ForkBalanceWindowManager();
             ForkBalanceViewModel vm = new ForkBalanceViewModel();
-            vm.AddressList = new ObservableCollection<BitcoinAddress>(AddressList.Where(x =>
-                    !x.Address.StartsWith("bc1", System.StringComparison.OrdinalIgnoreCase)));
+            vm.AddressList = new ObservableCollection<BitcoinAddress>(AddressList);
             winManager.Show(vm);
         }
 

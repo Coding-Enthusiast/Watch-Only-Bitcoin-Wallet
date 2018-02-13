@@ -123,7 +123,9 @@ namespace WatchOnlyBitcoinWallet.ViewModels
             IsReceiving = true;
 
             BalanceApi ba = new BlockCypher();
-            Response resp = await ba.UpdateTransactionListAsync(AddressList.ToList());
+            // Bech32 addresses in AddressList should be ignored until the block explorers and forks start supporting it.
+            Response resp = await ba.UpdateTransactionListAsync(AddressList.Where(x =>
+                    !x.Address.StartsWith("bc1", System.StringComparison.OrdinalIgnoreCase)).ToList());
 
             if (resp.Errors.Any())
             {
