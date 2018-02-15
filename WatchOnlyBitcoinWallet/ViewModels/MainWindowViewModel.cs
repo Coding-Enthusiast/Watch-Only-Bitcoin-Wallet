@@ -1,4 +1,6 @@
-﻿using MVVMLibrary;
+﻿using BitcoinLibrary;
+using MVVMLibrary;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -22,6 +24,9 @@ namespace WatchOnlyBitcoinWallet.ViewModels
             GetBalanceCommand = new BindableCommand(GetBalance, () => !IsReceiving);
             SettingsCommand = new BindableCommand(OpenSettings);
             ForkBalanceCommand = new BindableCommand(ForkBalance);
+
+            ImportFromTextCommand = new BindableCommand(ImportFromText);
+            ImportFromFileCommand = new BindableCommand(ImportFromFile);
 
             var ver = Assembly.GetExecutingAssembly().GetName().Version;
             VersionString = string.Format("Version {0}.{1}.{2}", ver.Major, ver.Minor, ver.Build);
@@ -126,6 +131,56 @@ namespace WatchOnlyBitcoinWallet.ViewModels
             ForkBalanceViewModel vm = new ForkBalanceViewModel();
             vm.AddressList = new ObservableCollection<BitcoinAddress>(AddressList);
             winManager.Show(vm);
+        }
+
+
+        public BindableCommand ImportFromTextCommand { get; private set; }
+        private void ImportFromText()
+        {
+
+        }
+
+
+        public BindableCommand ImportFromFileCommand { get; private set; }
+        private void ImportFromFile()
+        {
+            Response<string[]> resp = DataManager.OpenFileDialog();
+            if (resp.Errors.Any())
+            {
+                Errors = resp.Errors.GetErrors();
+                Status = "Encountered an error while reading from file!";
+            }
+            else if (resp.Result != null)
+            {
+                foreach (var s in resp.Result)
+                {
+                    // remove possible white space
+                    string addr = s.Replace(" ", "");
+
+                    VerificationResult vr = ValidateAddr(addr);
+                    if (vr.IsVerified)
+                    {
+                        AddressList.Add(new BitcoinAddress() { Address = addr });
+                    }
+                    else
+                    {
+                        Errors += Environment.NewLine + vr.Error + ": " + addr;
+                    }
+                }
+            }
+        }
+        private VerificationResult ValidateAddr(string addr)
+        {
+            VerificationResult vr = new VerificationResult();
+            if (addr.StartsWith("bc1"))
+            {
+                vr = SegWitAddress.Verify(addr, SegWitAddress.NetworkType.MainNet);
+            }
+            else
+            {
+                vr = Base58.Verify(addr);
+            }
+            return vr;
         }
 
 

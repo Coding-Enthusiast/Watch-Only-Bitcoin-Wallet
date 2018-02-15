@@ -140,6 +140,10 @@
     <Resource Include="myICO.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BitcoinLibrary\BitcoinLibrary.csproj">
+      <Project>{8fcc2c76-56f8-465f-b467-a21cf487b4ea}</Project>
+      <Name>BitcoinLibrary</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CommonLibrary\MVVMLibrary.csproj">
       <Project>{3b31423a-cc27-44bb-9d19-a5da92d0326d}</Project>
       <Name>MVVMLibrary</Name>

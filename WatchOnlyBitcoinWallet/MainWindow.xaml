@@ -39,6 +39,10 @@
                 <Separator />
                 <MenuItem Header="_Exit" Click="Exit_Click" InputGestureText="Alt+F4"/>
             </MenuItem>
+            <MenuItem Header="_Import">
+                <MenuItem Header="From _text" Command="{Binding ImportFromTextCommand, Mode=OneWay}"/>
+                <MenuItem Header="From _file" Command="{Binding ImportFromFileCommand, Mode=OneWay}" ToolTip="Addresses in the file should be separated by a new line."/>
+            </MenuItem>
         </Menu>
 
         <Grid Grid.Row="1">
