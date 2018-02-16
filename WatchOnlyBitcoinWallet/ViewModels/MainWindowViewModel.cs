@@ -1,4 +1,6 @@
-﻿using MVVMLibrary;
+﻿using BitcoinLibrary;
+using MVVMLibrary;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -23,6 +25,9 @@ namespace WatchOnlyBitcoinWallet.ViewModels
             SettingsCommand = new BindableCommand(OpenSettings);
             ForkBalanceCommand = new BindableCommand(ForkBalance);
 
+            ImportFromTextCommand = new BindableCommand(ImportFromText);
+            ImportFromFileCommand = new BindableCommand(ImportFromFile);
+
             var ver = Assembly.GetExecutingAssembly().GetName().Version;
             VersionString = string.Format("Version {0}.{1}.{2}", ver.Major, ver.Minor, ver.Build);
         }
@@ -43,7 +48,7 @@ namespace WatchOnlyBitcoinWallet.ViewModels
                     DataManager.WriteFile(AddressList, DataManager.FileType.Wallet);
                 }
             }
-            else if (e.ListChangedType == ListChangedType.ItemDeleted)
+            else if (e.ListChangedType == ListChangedType.ItemDeleted || e.ListChangedType == ListChangedType.ItemAdded)
             {
                 DataManager.WriteFile(AddressList, DataManager.FileType.Wallet);
             }
@@ -126,6 +131,67 @@ namespace WatchOnlyBitcoinWallet.ViewModels
             ForkBalanceViewModel vm = new ForkBalanceViewModel();
             vm.AddressList = new ObservableCollection<BitcoinAddress>(AddressList);
             winManager.Show(vm);
+        }
+
+
+        public BindableCommand ImportFromTextCommand { get; private set; }
+        private void ImportFromText()
+        {
+            IWindowManager winManager = new ImportWindowManager();
+            ImportViewModel vm = new ImportViewModel();
+            winManager.Show(vm);
+
+            if (vm.AddressList != null && vm.AddressList.Count != 0)
+            {
+                vm.AddressList.ForEach(x => AddressList.Add(x));
+                Status = string.Format("Successfully added {0} addresses.", vm.AddressList.Count);
+            }
+        }
+
+
+        public BindableCommand ImportFromFileCommand { get; private set; }
+        private void ImportFromFile()
+        {
+            Response<string[]> resp = DataManager.OpenFileDialog();
+            if (resp.Errors.Any())
+            {
+                Errors = resp.Errors.GetErrors();
+                Status = "Encountered an error while reading from file!";
+            }
+            else if (resp.Result != null)
+            {
+                int addrCount = 0;
+                foreach (var s in resp.Result)
+                {
+                    // remove possible white space
+                    string addr = s.Replace(" ", "");
+
+                    VerificationResult vr = ValidateAddr(addr);
+                    if (vr.IsVerified)
+                    {
+                        AddressList.Add(new BitcoinAddress() { Address = addr });
+                        addrCount++;
+                    }
+                    else
+                    {
+                        Errors += Environment.NewLine + vr.Error + ": " + addr;
+                    }
+                }
+                Status = string.Format("Successfully added {0} addresses.", addrCount);
+            }
+        }
+        private VerificationResult ValidateAddr(string addr)
+        {
+            VerificationResult vr = new VerificationResult();
+            if (addr.StartsWith("bc1"))
+            {
+                vr = SegWitAddress.Verify(addr, SegWitAddress.NetworkType.MainNet);
+            }
+            else
+            {
+                vr = Base58.Verify(addr);
+            }
+            return vr;
         }
 
 

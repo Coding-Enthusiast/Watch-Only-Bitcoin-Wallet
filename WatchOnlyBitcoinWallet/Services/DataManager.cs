@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Win32;
+using Newtonsoft.Json;
 using System;
 using System.IO;
 
@@ -88,6 +89,32 @@ namespace WatchOnlyBitcoinWallet.Services
                 JsonSerializer ser = new JsonSerializer();
                 ser.Serialize(str, dataToSave);
             }
+        }
+
+
+        /// <summary>
+        /// Opens up default open dialog and tries reading the file.
+        /// </summary>
+        /// <returns>returns null on failure</returns>
+        public static Response<string[]> OpenFileDialog()
+        {
+            Response<string[]> resp = new Response<string[]>();
+
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
+            ofd.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            if (ofd.ShowDialog() == true)
+            {
+                try
+                {
+                    resp.Result = File.ReadAllLines(ofd.FileName);
+                }
+                catch (Exception)
+                {
+                    resp.Errors.Add("Could not read file!");
+                }
+            }
+            return resp;
         }
 
     }

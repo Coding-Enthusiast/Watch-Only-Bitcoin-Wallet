@@ -75,10 +75,14 @@
     <Compile Include="Services\Response.cs" />
     <Compile Include="Services\WindowManager.cs" />
     <Compile Include="ViewModels\ForkBalanceViewModel.cs" />
+    <Compile Include="ViewModels\ImportViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="Views\ForkBalanceWindow.xaml.cs">
       <DependentUpon>ForkBalanceWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ImportWindow.xaml.cs">
+      <DependentUpon>ImportWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
@@ -100,6 +104,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\ForkBalanceWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ImportWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -140,6 +148,10 @@
     <Resource Include="myICO.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BitcoinLibrary\BitcoinLibrary.csproj">
+      <Project>{8fcc2c76-56f8-465f-b467-a21cf487b4ea}</Project>
+      <Name>BitcoinLibrary</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CommonLibrary\MVVMLibrary.csproj">
       <Project>{3b31423a-cc27-44bb-9d19-a5da92d0326d}</Project>
       <Name>MVVMLibrary</Name>
