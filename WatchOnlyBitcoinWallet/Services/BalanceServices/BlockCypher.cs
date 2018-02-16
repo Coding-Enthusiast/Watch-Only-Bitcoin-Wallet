@@ -46,7 +46,7 @@ namespace WatchOnlyBitcoinWallet.Services.BalanceServices
                     Transaction tx = new Transaction();
                     tx.TxId = item["tx_hash"].ToString();
                     tx.BlockHeight = (int)item["block_height"];
-                    tx.Amount = ((int)item["tx_input_n"] == -1) ? (int)item["value"] : -(int)item["value"];
+                    tx.Amount = ((Int64)item["tx_input_n"] == -1) ? (Int64)item["value"] : -(Int64)item["value"];
 
                     Transaction tempTx = temp.Find(x => x.TxId == tx.TxId);
                     if (tempTx == null)
