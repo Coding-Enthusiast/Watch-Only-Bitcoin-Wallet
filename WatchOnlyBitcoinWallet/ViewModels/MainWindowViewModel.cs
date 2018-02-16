@@ -48,7 +48,7 @@ namespace WatchOnlyBitcoinWallet.ViewModels
                     DataManager.WriteFile(AddressList, DataManager.FileType.Wallet);
                 }
             }
-            else if (e.ListChangedType == ListChangedType.ItemDeleted)
+            else if (e.ListChangedType == ListChangedType.ItemDeleted || e.ListChangedType == ListChangedType.ItemAdded)
             {
                 DataManager.WriteFile(AddressList, DataManager.FileType.Wallet);
             }
@@ -137,7 +137,15 @@ namespace WatchOnlyBitcoinWallet.ViewModels
         public BindableCommand ImportFromTextCommand { get; private set; }
         private void ImportFromText()
         {
+            IWindowManager winManager = new ImportWindowManager();
+            ImportViewModel vm = new ImportViewModel();
+            winManager.Show(vm);
 
+            if (vm.AddressList != null && vm.AddressList.Count != 0)
+            {
+                vm.AddressList.ForEach(x => AddressList.Add(x));
+                Status = string.Format("Successfully added {0} addresses.", vm.AddressList.Count);
+            }
         }
 
 
@@ -152,6 +160,7 @@ namespace WatchOnlyBitcoinWallet.ViewModels
             }
             else if (resp.Result != null)
             {
+                int addrCount = 0;
                 foreach (var s in resp.Result)
                 {
                     // remove possible white space
@@ -161,12 +170,14 @@ namespace WatchOnlyBitcoinWallet.ViewModels
                     if (vr.IsVerified)
                     {
                         AddressList.Add(new BitcoinAddress() { Address = addr });
+                        addrCount++;
                     }
                     else
                     {
                         Errors += Environment.NewLine + vr.Error + ": " + addr;
                     }
                 }
+                Status = string.Format("Successfully added {0} addresses.", addrCount);
             }
         }
         private VerificationResult ValidateAddr(string addr)

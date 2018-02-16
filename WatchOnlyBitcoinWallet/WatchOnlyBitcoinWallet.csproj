@@ -75,10 +75,14 @@
     <Compile Include="Services\Response.cs" />
     <Compile Include="Services\WindowManager.cs" />
     <Compile Include="ViewModels\ForkBalanceViewModel.cs" />
+    <Compile Include="ViewModels\ImportViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="Views\ForkBalanceWindow.xaml.cs">
       <DependentUpon>ForkBalanceWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ImportWindow.xaml.cs">
+      <DependentUpon>ImportWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
@@ -100,6 +104,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\ForkBalanceWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ImportWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
