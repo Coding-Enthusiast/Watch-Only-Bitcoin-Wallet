@@ -1,10 +1,12 @@
 ﻿using MVVMLibrary;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using WatchOnlyBitcoinWallet.Models;
 using WatchOnlyBitcoinWallet.Services;
 using WatchOnlyBitcoinWallet.Services.BalanceServices;
+using WatchOnlyBitcoinWallet.Services.PriceServices;
 
 namespace WatchOnlyBitcoinWallet.ViewModels
 {
@@ -125,7 +127,31 @@ namespace WatchOnlyBitcoinWallet.ViewModels
             BalanceApi ba = new BlockCypher();
             // Bech32 addresses in AddressList should be ignored until the block explorers and forks start supporting it.
             Response resp = await ba.UpdateTransactionListAsync(AddressList.Where(x =>
-                    !x.Address.StartsWith("bc1", System.StringComparison.OrdinalIgnoreCase)).ToList());
+                    !x.Address.StartsWith("bc1", StringComparison.OrdinalIgnoreCase)).ToList());
+
+            Coindesk pa = new Coindesk();
+            DateTime start = AddressList.Where(x =>
+                    !x.Address.StartsWith("bc1", StringComparison.OrdinalIgnoreCase))
+                    .Min(x => x.TransactionList.Min(y => y.ConfirmedTime));
+            DateTime end = AddressList.Where(x =>
+                    !x.Address.StartsWith("bc1", StringComparison.OrdinalIgnoreCase)).Max(x => x.TransactionList.Max(y => y.ConfirmedTime)); ;
+            Response<List<PriceHistory>> resp2 = await pa.GetPriceHistoryAsync(start, end);
+
+            foreach (var adr in AddressList)
+            {
+                if (adr.TransactionList == null)
+                {
+                    continue;
+                }
+                foreach (var tx in adr.TransactionList)
+                {
+                    PriceHistory ph = resp2.Result.Find(x => x.Time.Date.Equals(tx.ConfirmedTime.Date));
+                    if (ph != null)
+                    {
+                        tx.UsdValue = ph.Price;
+                    }
+                }
+            }
 
             if (resp.Errors.Any())
             {

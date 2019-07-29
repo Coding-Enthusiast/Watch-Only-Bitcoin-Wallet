@@ -24,5 +24,10 @@ namespace WatchOnlyBitcoinWallet.Models
         /// <see cref="DateTime"/> value of when this transaction was confirmed.
         /// </summary>
         public DateTime ConfirmedTime { get; set; }
+
+        /// <summary>
+        /// Value of this transaction in USD.
+        /// </summary>
+        public decimal UsdValue { get; set; }
     }
 }
