@@ -93,7 +93,7 @@
                     <TextBlock Text="{Binding Errors}" Visibility="{Binding IsErrorMsgVisible, Converter={StaticResource visibilityConverter}}" TextWrapping="Wrap" Background="#FFECB1B1"/>
                 </ScrollViewer>
 
-                <TextBox Text="{Binding VersionString}" FontWeight="Bold" TextAlignment="Center" Background="#FFADD8EC" IsReadOnly="True" Focusable="False" IsTabStop="False" Cursor="Pen" FontFamily="Comic Sans MS" Margin="5" Grid.ColumnSpan="2" Grid.Row="5">
+                <TextBox Text="{Binding VersionString, Mode=OneTime}" FontWeight="Bold" TextAlignment="Center" Background="#FFADD8EC" IsReadOnly="True" Focusable="False" IsTabStop="False" Cursor="Pen" FontFamily="Comic Sans MS" Margin="5" Grid.ColumnSpan="2" Grid.Row="5">
                     <TextBox.Effect>
                         <DropShadowEffect/>
                     </TextBox.Effect>

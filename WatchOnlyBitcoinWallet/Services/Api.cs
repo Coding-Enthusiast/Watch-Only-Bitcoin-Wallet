@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using WatchOnlyBitcoinWallet.Models;
@@ -10,7 +11,8 @@ namespace WatchOnlyBitcoinWallet.Services
     public enum PriceServiceNames
     {
         Bitfinex,
-        Btce
+        Btce,
+        Coindesk
     }
     public enum BalanceServiceNames
     {
@@ -29,6 +31,10 @@ namespace WatchOnlyBitcoinWallet.Services
             {
                 try
                 {
+                    ServicePointManager.SecurityProtocol =
+                        SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls |
+                        SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+
                     string result = await client.GetStringAsync(url);
                     resp.Result = JObject.Parse(result);
                 }

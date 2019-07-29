@@ -134,6 +134,9 @@ namespace WatchOnlyBitcoinWallet.ViewModels
                 case PriceServiceNames.Btce:
                     api = new Btce();
                     break;
+                case PriceServiceNames.Coindesk:
+                    api = new Coindesk();
+                    break;
                 default:
                     api = new Bitfinex();
                     break;

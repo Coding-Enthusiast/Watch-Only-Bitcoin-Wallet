@@ -1,4 +1,5 @@
 ﻿using MVVMLibrary;
+using System;
 
 namespace WatchOnlyBitcoinWallet.Models
 {
@@ -18,5 +19,10 @@ namespace WatchOnlyBitcoinWallet.Models
         /// Amount that was sent or received (+/-)
         /// </summary>
         public decimal Amount { get; set; }
+
+        /// <summary>
+        /// <see cref="DateTime"/> value of when this transaction was confirmed.
+        /// </summary>
+        public DateTime ConfirmedTime { get; set; }
     }
 }
