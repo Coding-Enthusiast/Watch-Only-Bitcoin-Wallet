@@ -210,12 +210,6 @@ namespace WatchOnlyBitcoinWallet.ViewModels
             BalanceApi api = null;
             switch (SettingsInstance.SelectedBalanceApi)
             {
-                case BalanceServiceNames.BlockchainInfo:
-                    api = new BlockchainInfo();
-                    break;
-                case BalanceServiceNames.BlockExplorer:
-                    api = new BlockExplorer();
-                    break;
                 case BalanceServiceNames.BlockCypher:
                     api = new BlockCypher();
                     break;
@@ -223,54 +217,21 @@ namespace WatchOnlyBitcoinWallet.ViewModels
                     api = new Blockonomics();
                     break;
                 default:
-                    api = new BlockchainInfo();
+                    api = new BlockCypher();
                     break;
             }
 
-            // Not all exchanges support Bech32 addresses!
-            // The following "if" is to solve that.
-            bool hasSegWit = AddressList.Any(x => x.Address.StartsWith("bc1", System.StringComparison.InvariantCultureIgnoreCase));
-            if (hasSegWit && !SettingsInstance.SelectedBalanceApi.Equals(BalanceServiceNames.Blockonomics))
+            Response resp = await api.UpdateBalancesAsync(AddressList.ToList());
+            if (resp.Errors.Any())
             {
-                BalanceApi segApi = new Blockonomics();
-                List<BitcoinAddress> legacyAddrs = new List<BitcoinAddress>(AddressList.Where(x =>
-                    !x.Address.StartsWith("bc1", System.StringComparison.OrdinalIgnoreCase)));
-                List<BitcoinAddress> segWitAddrs = new List<BitcoinAddress>(AddressList.Where(x =>
-                    x.Address.StartsWith("bc1", System.StringComparison.OrdinalIgnoreCase)));
-
-                Response respSW = await segApi.UpdateBalancesAsync(segWitAddrs);
-                if (respSW.Errors.Any())
-                {
-                    Errors = "SegWit API error: " + respSW.Errors.GetErrors();
-                    Status = "Error in SegWit API! Continue updating legacy balances...";
-                }
-                Response resp = await api.UpdateBalancesAsync(legacyAddrs);
-                if (resp.Errors.Any())
-                {
-                    Errors = resp.Errors.GetErrors();
-                    Status = "Encountered an error!";
-                }
-                else
-                {
-                    DataManager.WriteFile(AddressList, DataManager.FileType.Wallet);
-                    RaisePropertyChanged("BitcoinBalance");
-                    Status = "Balance Update Success!";
-                }
+                Errors = resp.Errors.GetErrors();
+                Status = "Encountered an error!";
             }
             else
             {
-                Response resp = await api.UpdateBalancesAsync(AddressList.ToList());
-                if (resp.Errors.Any())
-                {
-                    Errors = resp.Errors.GetErrors();
-                    Status = "Encountered an error!";
-                }
-                else
-                {
-                    DataManager.WriteFile(AddressList, DataManager.FileType.Wallet);
-                    RaisePropertyChanged("BitcoinBalance");
-                    Status = "Balance Update Success!";
-                }
+                DataManager.WriteFile(AddressList, DataManager.FileType.Wallet);
+                RaisePropertyChanged("BitcoinBalance");
+                Status = "Balance Update Success!";
             }
 
             IsReceiving = false;

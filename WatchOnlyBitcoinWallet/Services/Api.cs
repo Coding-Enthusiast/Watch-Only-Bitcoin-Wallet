@@ -16,8 +16,6 @@ namespace WatchOnlyBitcoinWallet.Services
     }
     public enum BalanceServiceNames
     {
-        BlockchainInfo,
-        BlockExplorer,
         BlockCypher,
         Blockonomics
     }
