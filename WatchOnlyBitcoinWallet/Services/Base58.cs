@@ -2,8 +2,9 @@
 using System.Linq;
 using System.Numerics;
 using System.Security.Cryptography;
+using WatchOnlyBitcoinWallet.Models;
 
-namespace BitcoinLibrary
+namespace WatchOnlyBitcoinWallet.Services
 {
     public static class Base58
     {

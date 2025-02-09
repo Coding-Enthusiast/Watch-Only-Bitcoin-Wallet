@@ -1,14 +1,16 @@
-﻿namespace MVVMLibrary
+﻿using WatchOnlyBitcoinWallet.MVVM;
+
+namespace WatchOnlyBitcoinWallet.ViewModels
 {
-    public class ViewModelBase : CommonBase
+    public class ViewModelBase : InpcBase
     {
         /// <summary>
         /// Used for changing the visibility of error message TextBox.
         /// </summary>
         public bool IsErrorMsgVisible
         {
-            get { return isErrorMsgVisible; }
-            private set { SetField(ref isErrorMsgVisible, value); }
+            get => isErrorMsgVisible;
+            private set => SetField(ref isErrorMsgVisible, value);
         }
         private bool isErrorMsgVisible;
 
@@ -17,7 +19,7 @@
         /// </summary>
         public string Errors
         {
-            get { return errors; }
+            get => errors;
             set
             {
                 if (SetField(ref errors, value))
@@ -33,8 +35,8 @@
         /// </summary>
         public string Status
         {
-            get { return status; }
-            set { SetField(ref status, value); }
+            get => status;
+            set => SetField(ref status, value);
         }
         private string status;
 

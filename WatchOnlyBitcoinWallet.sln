@@ -1,15 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35707.178
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WatchOnlyBitcoinWallet", "WatchOnlyBitcoinWallet\WatchOnlyBitcoinWallet.csproj", "{3E275526-08A4-4B6B-8E69-9C6194198220}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVVMLibrary", "CommonLibrary\MVVMLibrary.csproj", "{3B31423A-CC27-44BB-9D19-A5DA92D0326D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BitcoinLibrary", "BitcoinLibrary\BitcoinLibrary.csproj", "{8FCC2C76-56F8-465F-B467-A21CF487B4EA}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BitcoinLibraryTests", "BitcoinLibraryTests\BitcoinLibraryTests.csproj", "{9948D343-8D56-45C0-9809-7664D8953563}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{D9C25F03-EF48-4409-82A4-98E92EE17D30}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,18 +17,10 @@ Global
 		{3E275526-08A4-4B6B-8E69-9C6194198220}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E275526-08A4-4B6B-8E69-9C6194198220}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E275526-08A4-4B6B-8E69-9C6194198220}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3B31423A-CC27-44BB-9D19-A5DA92D0326D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3B31423A-CC27-44BB-9D19-A5DA92D0326D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3B31423A-CC27-44BB-9D19-A5DA92D0326D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3B31423A-CC27-44BB-9D19-A5DA92D0326D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8FCC2C76-56F8-465F-B467-A21CF487B4EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8FCC2C76-56F8-465F-B467-A21CF487B4EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8FCC2C76-56F8-465F-B467-A21CF487B4EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8FCC2C76-56F8-465F-B467-A21CF487B4EA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9948D343-8D56-45C0-9809-7664D8953563}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9948D343-8D56-45C0-9809-7664D8953563}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9948D343-8D56-45C0-9809-7664D8953563}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9948D343-8D56-45C0-9809-7664D8953563}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9C25F03-EF48-4409-82A4-98E92EE17D30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9C25F03-EF48-4409-82A4-98E92EE17D30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9C25F03-EF48-4409-82A4-98E92EE17D30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9C25F03-EF48-4409-82A4-98E92EE17D30}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

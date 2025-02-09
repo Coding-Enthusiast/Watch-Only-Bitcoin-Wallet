@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using WatchOnlyBitcoinWallet.Models;
 
-namespace BitcoinLibrary
+namespace WatchOnlyBitcoinWallet.Services
 {
     public static class SegWitAddress
     {

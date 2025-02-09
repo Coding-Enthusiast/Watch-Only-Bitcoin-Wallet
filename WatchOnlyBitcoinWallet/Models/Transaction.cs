@@ -1,9 +1,9 @@
-﻿using MVVMLibrary;
-using System;
+﻿using System;
+using WatchOnlyBitcoinWallet.MVVM;
 
 namespace WatchOnlyBitcoinWallet.Models
 {
-    public class Transaction : CommonBase
+    public class Transaction : InpcBase
     {
         /// <summary>
         /// Transaction ID

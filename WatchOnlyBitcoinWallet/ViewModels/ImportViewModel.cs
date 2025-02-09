@@ -1,8 +1,8 @@
-﻿using BitcoinLibrary;
-using MVVMLibrary;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using WatchOnlyBitcoinWallet.Models;
+using WatchOnlyBitcoinWallet.MVVM;
+using WatchOnlyBitcoinWallet.Services;
 
 namespace WatchOnlyBitcoinWallet.ViewModels
 {

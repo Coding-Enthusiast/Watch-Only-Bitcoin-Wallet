@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace MVVMLibrary
+namespace WatchOnlyBitcoinWallet.MVVM.Converters
 {
     public class BooleanToVisibilityConverter : IValueConverter
     {

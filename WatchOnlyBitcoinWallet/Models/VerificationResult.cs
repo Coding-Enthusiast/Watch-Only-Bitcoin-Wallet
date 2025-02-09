@@ -1,4 +1,4 @@
-﻿namespace BitcoinLibrary
+﻿namespace WatchOnlyBitcoinWallet.Models
 {
     public class VerificationResult
     {

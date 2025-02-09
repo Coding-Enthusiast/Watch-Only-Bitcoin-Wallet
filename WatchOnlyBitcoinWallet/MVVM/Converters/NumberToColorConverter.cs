@@ -2,7 +2,7 @@
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace MVVMLibrary
+namespace WatchOnlyBitcoinWallet.MVVM.Converters
 {
     /// <summary>
     /// Converts a decimal number to color.

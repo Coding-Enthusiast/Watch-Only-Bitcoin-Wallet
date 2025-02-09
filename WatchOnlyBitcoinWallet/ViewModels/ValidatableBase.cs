@@ -1,12 +1,14 @@
-﻿using BitcoinLibrary;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using WatchOnlyBitcoinWallet.Models;
+using WatchOnlyBitcoinWallet.MVVM;
+using WatchOnlyBitcoinWallet.Services;
 
-namespace MVVMLibrary
+namespace WatchOnlyBitcoinWallet.ViewModels
 {
-    public class ValidatableBase : CommonBase, INotifyDataErrorInfo
+    public class ValidatableBase : InpcBase, INotifyDataErrorInfo
     {
         private Dictionary<string, List<string>> errors = new Dictionary<string, List<string>>();
 

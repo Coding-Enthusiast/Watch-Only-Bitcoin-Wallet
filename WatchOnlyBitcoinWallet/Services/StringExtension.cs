@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
-namespace MVVMLibrary
+namespace WatchOnlyBitcoinWallet.Services
 {
     public static class StringExtension
     {

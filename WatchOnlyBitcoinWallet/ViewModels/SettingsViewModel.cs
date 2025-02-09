@@ -1,7 +1,7 @@
-﻿using MVVMLibrary;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using WatchOnlyBitcoinWallet.Models;
+using WatchOnlyBitcoinWallet.MVVM;
 using WatchOnlyBitcoinWallet.Services;
 using WatchOnlyBitcoinWallet.Services.PriceServices;
 

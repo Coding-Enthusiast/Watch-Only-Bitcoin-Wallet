@@ -1,9 +1,9 @@
-﻿using MVVMLibrary;
+﻿using WatchOnlyBitcoinWallet.MVVM;
 using WatchOnlyBitcoinWallet.Services;
 
 namespace WatchOnlyBitcoinWallet.Models
 {
-    public class SettingsModel : CommonBase
+    public class SettingsModel : InpcBase
     {
         public decimal BitcoinPriceInUSD { get; set; }
         public decimal DollarPriceInLocalCurrency { get; set; }
