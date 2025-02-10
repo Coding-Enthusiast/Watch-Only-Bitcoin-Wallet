@@ -3,11 +3,15 @@
 // Distributed under the MIT software license, see the accompanying
 // file LICENCE or http://www.opensource.org/licenses/mit-license.php.
 
-using System.Windows;
+using Avalonia.Controls;
 
-namespace WatchOnlyBitcoinWallet
+namespace WatchOnlyBitcoinWallet.Views
 {
-    public partial class App : Application
+    public partial class ImportWindow : Window
     {
+        public ImportWindow()
+        {
+            InitializeComponent();
+        }
     }
 }

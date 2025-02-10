@@ -105,20 +105,20 @@ namespace WatchOnlyBitcoinWallet.Services
         {
             Response<string[]> resp = new Response<string[]>();
 
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
-            ofd.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            if (ofd.ShowDialog() == true)
-            {
-                try
-                {
-                    resp.Result = File.ReadAllLines(ofd.FileName);
-                }
-                catch (Exception)
-                {
-                    resp.Errors.Add("Could not read file!");
-                }
-            }
+            //OpenFileDialog ofd = new OpenFileDialog();
+            //ofd.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
+            //ofd.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            //if (ofd.ShowDialog() == true)
+            //{
+            //    try
+            //    {
+            //        resp.Result = File.ReadAllLines(ofd.FileName);
+            //    }
+            //    catch (Exception)
+            //    {
+            //        resp.Errors.Add("Could not read file!");
+            //    }
+            //}
             return resp;
         }
 

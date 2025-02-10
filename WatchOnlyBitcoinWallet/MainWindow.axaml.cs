@@ -3,7 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file LICENCE or http://www.opensource.org/licenses/mit-license.php.
 
-using System.Windows;
+using Avalonia.Controls;
+using Avalonia.Interactivity;
 
 namespace WatchOnlyBitcoinWallet
 {
@@ -17,8 +18,8 @@ namespace WatchOnlyBitcoinWallet
         private void About_Click(object sender, RoutedEventArgs e)
         {
             AboutWindow myWin = new AboutWindow();
-            myWin.Owner = this;
-            myWin.ShowDialog();
+            //myWin.Owner = this;
+            //myWin.ShowDialog();
         }
 
         private void Exit_Click(object sender, RoutedEventArgs e)

@@ -3,10 +3,9 @@
 // Distributed under the MIT software license, see the accompanying
 // file LICENCE or http://www.opensource.org/licenses/mit-license.php.
 
+using Avalonia.Data.Converters;
 using System;
 using System.Globalization;
-using System.Windows;
-using System.Windows.Data;
 
 namespace WatchOnlyBitcoinWallet.MVVM.Converters
 {
@@ -16,11 +15,11 @@ namespace WatchOnlyBitcoinWallet.MVVM.Converters
         {
             if ((bool)value)
             {
-                return Visibility.Visible;
+                return true /*Visibility.Visible*/;
             }
             else
             {
-                return Visibility.Hidden;
+                return false /*Visibility.Hidden*/;
             }
         }
 

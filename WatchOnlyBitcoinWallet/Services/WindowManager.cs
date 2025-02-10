@@ -20,8 +20,8 @@ namespace WatchOnlyBitcoinWallet.Services
         {
             SettingsWindow myWin = new SettingsWindow();
             myWin.DataContext = ViewModel;
-            myWin.Owner = Application.Current.MainWindow;
-            myWin.ShowDialog();
+            //myWin.Owner = Application.Current.MainWindow;
+            //myWin.ShowDialog();
         }
     }
 
@@ -31,8 +31,8 @@ namespace WatchOnlyBitcoinWallet.Services
         {
             ForkBalanceWindow myWin = new ForkBalanceWindow();
             myWin.DataContext = ViewModel;
-            myWin.Owner = Application.Current.MainWindow;
-            myWin.ShowDialog();
+            //myWin.Owner = Application.Current.MainWindow;
+            //myWin.ShowDialog();
         }
     }
 
@@ -43,8 +43,8 @@ namespace WatchOnlyBitcoinWallet.Services
             ImportWindow myWin = new ImportWindow();
             myWin.DataContext = ViewModel;
             ((ImportViewModel)ViewModel).ClosingRequest += (sender, e) => myWin.Close();
-            myWin.Owner = Application.Current.MainWindow;
-            myWin.ShowDialog();
+            //myWin.Owner = Application.Current.MainWindow;
+            //myWin.ShowDialog();
         }
     }
 }

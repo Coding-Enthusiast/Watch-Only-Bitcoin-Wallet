@@ -1,0 +1,160 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:WatchOnlyBitcoinWallet.ViewModels"
+        xmlns:models="using:WatchOnlyBitcoinWallet.Models"
+        xmlns:views="clr-namespace:WatchOnlyBitcoinWallet.Views"
+        xmlns:mvvm="clr-namespace:WatchOnlyBitcoinWallet.MVVM.Converters"
+        mc:Ignorable="d"
+        x:Name="windowMain"
+        x:Class="WatchOnlyBitcoinWallet.MainWindow"
+        x:CompileBindings="True"
+        x:DataType="vm:MainWindowViewModel"
+        Title="Watch Only Bitcoin Wallet - Version 4"
+        Height="340" Width="700"
+        Icon="/Assets/Icon.png"
+        WindowStartupLocation="CenterScreen" FontSize="14">
+
+  <Design.DataContext>
+    <vm:MainWindowViewModel/>
+  </Design.DataContext>
+
+  <Window.Resources>
+    <mvvm:NumberToColorConverter x:Key="numToColorConverter"/>
+  </Window.Resources>
+
+  <Window.KeyBindings>
+    <!--<KeyBinding Gesture="F1" Command="{Binding OpenAboutCommand}"/>-->
+    <KeyBinding Gesture="F2" Command="{Binding SettingsCommand}"/>
+    <KeyBinding Gesture="F3" Command="{Binding ForkBalanceCommand}"/>
+
+  </Window.KeyBindings>
+
+  <Grid RowDefinitions="auto,*,auto">
+
+    <Menu Background="LightGray" Grid.Row="0">
+      <MenuItem Header="_Options">
+        <MenuItem Header="_Settings"
+                  InputGesture="F2"
+                  Command="{Binding SettingsCommand}"/>
+        <MenuItem Header="_Fork Balances"
+                  InputGesture="F3"
+                  Command="{Binding ForkBalanceCommand}"/>
+        <MenuItem Header="_About" Click="About_Click"
+                  InputGesture="F1"/>
+        <Separator />
+        <MenuItem Header="_Exit"
+                  Click="Exit_Click"
+                  InputGesture="Alt+F4"/>
+      </MenuItem>
+      <MenuItem Header="_Import">
+        <MenuItem Header="From _text"
+                  Command="{Binding ImportFromTextCommand}"/>
+        <MenuItem Header="From _file"
+                  Command="{Binding ImportFromFileCommand}"
+                  ToolTip.Tip="Addresses in the file should be separated by a new line."/>
+      </MenuItem>
+    </Menu>
+
+    <Grid Margin="3" ColumnDefinitions="*,530,auto" Grid.Row="1">
+      <Grid ColumnDefinitions="auto,*"
+            RowDefinitions="auto,auto,auto,auto,*,auto"
+            Grid.Column="0">
+
+        <Button Content="Update Balances"
+                Command="{Binding GetBalanceCommand}"
+                VerticalContentAlignment="Center"
+                Height="35"
+                Grid.ColumnSpan="2" Grid.Row="0"/>
+
+        <TextBlock Text="฿ "
+                   Grid.Column="0" Grid.Row="1"/>
+        <TextBlock Text="$ "
+                   Grid.Column="0" Grid.Row="2"/>
+        <TextBlock Text="{Binding SettingsInstance.LocalCurrencySymbol}"
+                   Grid.Column="0" Grid.Row="3"/>
+
+        <TextBlock Text="{Binding BitcoinBalance, StringFormat=\{0:N8\}}"
+                   Grid.Column="1" Grid.Row="1"/>
+        <TextBlock Text="{Binding BitcoinBalanceUSD, StringFormat=\{0:N2\}}"
+                   Grid.Column="1" Grid.Row="2"/>
+        <TextBlock Text="{Binding BitcoinBalanceLC, StringFormat=\{0:N0\}}"
+                   Grid.Column="1" Grid.Row="3"/>
+
+        <TextBlock Text="{Binding Errors}"
+                   IsVisible="{Binding IsErrorMsgVisible}"
+                   TextWrapping="Wrap"
+                   Background="#FFECB1B1"
+                   ScrollViewer.VerticalScrollBarVisibility="Visible"
+                   Grid.ColumnSpan="2" Grid.Row="4"/>
+
+        <TextBlock Text="{Binding VersionString, Mode=OneTime}"
+                   FontWeight="Bold"
+                   TextAlignment="Center"
+                   Background="#FFADD8EC"
+                   Cursor="Hand"
+                   FontFamily="Comic Sans MS"
+                   Margin="3"
+                   Grid.ColumnSpan="2" Grid.Row="5">
+          <TextBlock.Effect>
+            <DropShadowEffect BlurRadius="20"/>
+          </TextBlock.Effect>
+        </TextBlock>
+      </Grid>
+
+      <ListBox ItemsSource="{Binding AddressList}" Margin="3" Grid.Column="1">
+        <ListBox.Template>
+          <ControlTemplate>
+            <DockPanel LastChildFill="True">
+              <Grid DockPanel.Dock="Top" ColumnDefinitions="60,350,*">
+                <TextBlock Text="Name" HorizontalAlignment="Center" Grid.Column="0"/>
+                <TextBlock Text="Address" HorizontalAlignment="Center" Grid.Column="1"/>
+                <TextBlock Text="Balance" HorizontalAlignment="Center" Grid.Column="2"/>
+              </Grid>
+              <ScrollViewer>
+                <ItemsPresenter/>
+              </ScrollViewer>
+            </DockPanel>
+          </ControlTemplate>
+        </ListBox.Template>
+        <ListBox.DataTemplates>
+          <DataTemplate DataType="{x:Type models:BitcoinAddress}">
+            <Grid ColumnDefinitions="60,350,*">
+              <TextBlock Text="{Binding Name}" Grid.Column="0"/>
+              <TextBlock Text="{Binding Address}" Grid.Column="1"/>
+              <TextBlock Text="{Binding Balance, StringFormat=\{0:N8\}}"
+                         ToolTip.Tip="{Binding Difference, StringFormat=\{0:N8\}}"
+                         Background="{Binding Difference, Converter={StaticResource numToColorConverter}}"
+                         HorizontalAlignment="Right"
+                         Margin="0,0,10,0"
+                         Grid.Column="2"/>
+            </Grid>
+          </DataTemplate>
+        </ListBox.DataTemplates>
+      </ListBox>
+
+      <StackPanel Grid.Column="2">
+        <Button Content="+"
+                ToolTip.Tip="Add New"/>
+        <Button Content="D"
+                ToolTip.Tip="Remove Selected"/>
+        <Button Content="D"
+                ToolTip.Tip="Edit Selected"/>
+        <Button Content="U"
+                ToolTip.Tip="Move Up"/>
+        <Button Content="D"
+                ToolTip.Tip="Move Down"/>
+      </StackPanel>
+
+    </Grid>
+
+    <StackPanel Grid.Row="2">
+      <TextBlock Text="{Binding Status}"
+                 Height="25"
+                 Background="LightGray"
+                 FontFamily="Comi"/>
+    </StackPanel>
+
+  </Grid>
+</Window>
