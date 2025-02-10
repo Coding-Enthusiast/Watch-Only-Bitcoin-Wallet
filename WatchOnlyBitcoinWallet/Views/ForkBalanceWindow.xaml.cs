@@ -1,22 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// WatchOnlyBitcoinWallet
+// Copyright (c) 2016 Coding Enthusiast
+// Distributed under the MIT software license, see the accompanying
+// file LICENCE or http://www.opensource.org/licenses/mit-license.php.
+
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace WatchOnlyBitcoinWallet.Views
 {
-    /// <summary>
-    /// Interaction logic for ForkBalanceWindow.xaml
-    /// </summary>
     public partial class ForkBalanceWindow : Window
     {
         public ForkBalanceWindow()

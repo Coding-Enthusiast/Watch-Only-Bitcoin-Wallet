@@ -1,8 +1,12 @@
-﻿using System.Windows;
+﻿// WatchOnlyBitcoinWallet
+// Copyright (c) 2016 Coding Enthusiast
+// Distributed under the MIT software license, see the accompanying
+// file LICENCE or http://www.opensource.org/licenses/mit-license.php.
 
 using System.Diagnostics;
-using System.Windows.Navigation;
 using System.Reflection;
+using System.Windows;
+using System.Windows.Navigation;
 
 namespace WatchOnlyBitcoinWallet
 {

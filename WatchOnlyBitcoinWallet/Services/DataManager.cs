@@ -1,4 +1,9 @@
-﻿using Microsoft.Win32;
+﻿// WatchOnlyBitcoinWallet
+// Copyright (c) 2016 Coding Enthusiast
+// Distributed under the MIT software license, see the accompanying
+// file LICENCE or http://www.opensource.org/licenses/mit-license.php.
+
+using Microsoft.Win32;
 using Newtonsoft.Json;
 using System;
 using System.IO;
