@@ -11,30 +11,31 @@ namespace WatchOnlyBitcoinWallet.MVVM.Converters
 {
     /// <summary>
     /// Converts a decimal number to color.
-    /// </para> positive : green
-    /// </para> negative : red
-    /// </para> zero : null
+    /// <para/> positive : green
+    /// <para/> negative : red
+    /// <para/> zero : transparent
     /// </summary>
     public class NumberToColorConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object Convert(object? value, Type targetType, object? parameter, System.Globalization.CultureInfo culture)
         {
-            decimal number = (decimal)value;
-            if (number == 0)
+            if (value is decimal d)
             {
-                return null;
+                switch (d)
+                {
+                    case 0:
+                        return Brushes.Transparent;
+                    case > 0:
+                        return Brushes.LightGreen;
+                    case < 0:
+                        return Brushes.Orange;
+                }
             }
-            else if (number >= 0)
-            {
-                return Brushes.LightGreen;
-            }
-            else
-            {
-                return Brushes.Orange;
-            }
+
+            throw new NotImplementedException();
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object ConvertBack(object? value, Type targetType, object? parameter, System.Globalization.CultureInfo culture)
         {
             throw new NotImplementedException();
         }
