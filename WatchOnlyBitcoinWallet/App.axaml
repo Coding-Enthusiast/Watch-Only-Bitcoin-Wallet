@@ -3,13 +3,20 @@
              xmlns:local="clr-namespace:WatchOnlyBitcoinWallet"
              xmlns:vm="clr-namespace:WatchOnlyBitcoinWallet.ViewModels"
              xmlns:views="clr-namespace:WatchOnlyBitcoinWallet.Views"
+             xmlns:xxx="clr-namespace:WatchOnlyBitcoinWallet"
              x:Class="WatchOnlyBitcoinWallet.App"
              RequestedThemeVariant="Default">
 
   <Application.Styles>
     <FluentTheme/>
   </Application.Styles>
-  
+
+  <Application.DataTemplates>
+    <DataTemplate DataType="{x:Type vm:SettingsViewModel}">
+      <views:SettingsView/>
+    </DataTemplate>
+  </Application.DataTemplates>
+
   <Application.Resources>
 
   </Application.Resources>

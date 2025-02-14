@@ -46,22 +46,6 @@ namespace WatchOnlyBitcoinWallet.Services
         }
     }
 
-    public class SettingsWindowManager : IWindowManager
-    {
-        public void Show(ViewModelBase ViewModel)
-        {
-            SettingsWindow myWin = new SettingsWindow();
-            myWin.DataContext = ViewModel;
-            //myWin.Owner = Application.Current.MainWindow;
-            //myWin.ShowDialog();
-        }
-
-        public Task ShowDialog(ViewModelBase vm)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
     public class ForkBalanceWindowManager : IWindowManager
     {
         public void Show(ViewModelBase ViewModel)

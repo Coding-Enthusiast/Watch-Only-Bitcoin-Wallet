@@ -20,6 +20,8 @@ namespace WatchOnlyBitcoinWallet.ViewModels
     {
         public MainWindowViewModel()
         {
+            WindowMan = new WindowManager();
+
             AddressList = new BindingList<BitcoinAddress>(DataManager.ReadFile<List<BitcoinAddress>>(DataManager.FileType.Wallet));
             AddressList.ListChanged += AddressList_ListChanged;
 
@@ -57,6 +59,9 @@ namespace WatchOnlyBitcoinWallet.ViewModels
                 DataManager.WriteFile(AddressList, DataManager.FileType.Wallet);
             }
         }
+
+
+        public IWindowManager WindowMan { get; set; }
 
 
         /// <summary>
@@ -117,13 +122,10 @@ namespace WatchOnlyBitcoinWallet.ViewModels
 
 
         public BindableCommand SettingsCommand { get; private set; }
-        private void OpenSettings()
+        private async void OpenSettings()
         {
-            IWindowManager winManager = new SettingsWindowManager();
-            SettingsViewModel vm = new SettingsViewModel();
-            vm.Settings = SettingsInstance;
-            winManager.Show(vm);
-            RaisePropertyChanged("SettingsInstance");
+            SettingsViewModel vm = new(SettingsInstance);
+            await WindowMan.ShowDialog(vm);
             DataManager.WriteFile(SettingsInstance, DataManager.FileType.Settings);
         }
 

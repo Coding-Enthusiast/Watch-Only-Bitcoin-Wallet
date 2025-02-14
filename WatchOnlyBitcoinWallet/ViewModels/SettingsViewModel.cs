@@ -4,7 +4,7 @@
 // file LICENCE or http://www.opensource.org/licenses/mit-license.php.
 
 using System;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using WatchOnlyBitcoinWallet.Models;
 using WatchOnlyBitcoinWallet.MVVM;
 using WatchOnlyBitcoinWallet.Services;
@@ -14,110 +14,39 @@ namespace WatchOnlyBitcoinWallet.ViewModels
 {
     public class SettingsViewModel : ViewModelBase
     {
-        public SettingsViewModel()
+        /// <summary>
+        /// Make designer happy!
+        /// </summary>
+        public SettingsViewModel() : this(new SettingsModel())
         {
-            BalanceApiList = new ObservableCollection<BalanceServiceNames>((BalanceServiceNames[])Enum.GetValues(typeof(BalanceServiceNames)));
-            PriceApiList = new ObservableCollection<PriceServiceNames>((PriceServiceNames[])Enum.GetValues(typeof(PriceServiceNames)));
+        }
+
+        public SettingsViewModel(SettingsModel settings)
+        {
+            Settings = settings;
+
+            BalanceApiList = new(EnumHelper.GetAllEnumValues<BalanceServiceNames>());
+            PriceApiList = new(EnumHelper.GetAllEnumValues<PriceServiceNames>());
 
             UpdatePriceCommand = new BindableCommand(UpdatePrice, () => !IsReceiving);
         }
 
 
+        public SettingsModel Settings { get; }
 
-        /// <summary>
-        /// Indicating an active connection.
-        /// <para/> Used to enable/disable buttons
-        /// </summary>
+        public List<BalanceServiceNames> BalanceApiList { get; }
+        public List<PriceServiceNames> PriceApiList { get; }
+
+
+        private bool _isRcv;
         public bool IsReceiving
         {
-            get { return isReceiving; }
+            get => _isRcv;
             set
             {
-                if (SetField(ref isReceiving, value))
+                if (SetField(ref _isRcv, value))
                 {
                     UpdatePriceCommand.RaiseCanExecuteChanged();
-                }
-            }
-        }
-        private bool isReceiving;
-
-
-        public ObservableCollection<BalanceServiceNames> BalanceApiList { get; set; }
-
-        public ObservableCollection<PriceServiceNames> PriceApiList { get; set; }
-
-
-        private SettingsModel settings;
-        public SettingsModel Settings
-        {
-            get { return settings; }
-            set { SetField(ref settings, value); }
-        }
-
-
-        public BalanceServiceNames SelectedBalanceApi
-        {
-            get { return Settings.SelectedBalanceApi; }
-            set
-            {
-                if (Settings.SelectedBalanceApi != value) // Can't use SetField here because of "ref"
-                {
-                    Settings.SelectedBalanceApi = value;
-                    RaisePropertyChanged("SelectedBalanceApi");
-                }
-            }
-        }
-
-
-        public PriceServiceNames SelectedPriceApi
-        {
-            get { return Settings.SelectedPriceApi; }
-            set
-            {
-                if (Settings.SelectedPriceApi != value)
-                {
-                    Settings.SelectedPriceApi = value;
-                    RaisePropertyChanged("SelectedPriceApi");
-                }
-            }
-        }
-
-
-        public decimal BitcoinPrice
-        {
-            get { return Settings.BitcoinPriceInUSD; }
-            set
-            {
-                if (Settings.BitcoinPriceInUSD != value)
-                {
-                    Settings.BitcoinPriceInUSD = value;
-                    RaisePropertyChanged("BitcoinPrice");
-                }
-            }
-        }
-
-        public decimal USDPrice
-        {
-            get { return Settings.DollarPriceInLocalCurrency; }
-            set
-            {
-                if (Settings.DollarPriceInLocalCurrency != value)
-                {
-                    Settings.DollarPriceInLocalCurrency = value;
-                    RaisePropertyChanged("USDPrice");
-                }
-            }
-        }
-
-        public string LocalCurrencySymbol
-        {
-            get { return Settings.LocalCurrencySymbol; }
-            set
-            {
-                if (Settings.LocalCurrencySymbol != value)
-                {
-                    Settings.LocalCurrencySymbol = value;
-                    RaisePropertyChanged("LocalCurrencySymbol");
                 }
             }
         }
@@ -130,22 +59,13 @@ namespace WatchOnlyBitcoinWallet.ViewModels
             Errors = string.Empty;
             IsReceiving = true;
 
-            PriceApi api = null;
-            switch (Settings.SelectedPriceApi)
+            PriceApi api = Settings.SelectedPriceApi switch
             {
-                case PriceServiceNames.Bitfinex:
-                    api = new Bitfinex();
-                    break;
-                case PriceServiceNames.Btce:
-                    api = new Btce();
-                    break;
-                case PriceServiceNames.Coindesk:
-                    api = new Coindesk();
-                    break;
-                default:
-                    api = new Bitfinex();
-                    break;
-            }
+                PriceServiceNames.Bitfinex => new Bitfinex(),
+                PriceServiceNames.Btce => new Btce(),
+                PriceServiceNames.Coindesk => new Coindesk(),
+                _ => throw new NotImplementedException(),
+            };
 
             Response<decimal> resp = await api.UpdatePriceAsync();
             if (resp.Errors.Any())
@@ -156,7 +76,6 @@ namespace WatchOnlyBitcoinWallet.ViewModels
             else
             {
                 Settings.BitcoinPriceInUSD = resp.Result;
-                RaisePropertyChanged("BitcoinPrice");
                 Status = "Price Update Success!";
             }
 
