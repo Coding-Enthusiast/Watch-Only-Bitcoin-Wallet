@@ -35,6 +35,7 @@ namespace WatchOnlyBitcoinWallet.Services
                 SizeToContent = SizeToContent.WidthAndHeight,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
                 CanResize = false,
+                ShowInTaskbar = false,
                 Title = vm.GetType().Name.Replace("ViewModel", ""),
             };
 
