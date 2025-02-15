@@ -3,6 +3,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file LICENCE or http://www.opensource.org/licenses/mit-license.php.
 
+using Avalonia.Input.Platform;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -28,7 +29,8 @@ namespace WatchOnlyBitcoinWallet.ViewModels
             SettingsInstance = DataManager.ReadFile<SettingsModel>(DataManager.FileType.Settings);
 
             GetBalanceCommand = new BindableCommand(GetBalance, () => !IsReceiving);
-            SettingsCommand = new BindableCommand(OpenSettings);
+            OpenAboutCommand = new BindableCommand(OpenAbout);
+            OpenSettingsCommand = new BindableCommand(OpenSettings);
             ForkBalanceCommand = new BindableCommand(ForkBalance);
 
             ImportFromTextCommand = new BindableCommand(ImportFromText);
@@ -62,6 +64,7 @@ namespace WatchOnlyBitcoinWallet.ViewModels
 
 
         public IWindowManager WindowMan { get; set; }
+        public IClipboard Clipboard { get; set; }
 
 
         /// <summary>
@@ -121,7 +124,14 @@ namespace WatchOnlyBitcoinWallet.ViewModels
         }
 
 
-        public BindableCommand SettingsCommand { get; private set; }
+        public BindableCommand OpenAboutCommand { get; private set; }
+        private async void OpenAbout()
+        {
+            //AboutViewModel vm = new($"({VersionString})", Clipboard);
+            //await WindowMan.ShowDialog(vm);
+        }
+
+        public BindableCommand OpenSettingsCommand { get; private set; }
         private async void OpenSettings()
         {
             SettingsViewModel vm = new(SettingsInstance);

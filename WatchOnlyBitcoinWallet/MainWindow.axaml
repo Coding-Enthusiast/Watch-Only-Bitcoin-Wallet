@@ -12,7 +12,8 @@
         x:CompileBindings="True"
         x:DataType="vm:MainWindowViewModel"
         Title="Watch Only Bitcoin Wallet - Version 4"
-        Height="340" Width="700"
+        Height="340" Width="740"
+        CanResize="False"
         Icon="/Assets/Icon.png"
         WindowStartupLocation="CenterScreen" FontSize="14">
 
@@ -25,8 +26,8 @@
   </Window.Resources>
 
   <Window.KeyBindings>
-    <!--<KeyBinding Gesture="F1" Command="{Binding OpenAboutCommand}"/>-->
-    <KeyBinding Gesture="F2" Command="{Binding SettingsCommand}"/>
+    <KeyBinding Gesture="F1" Command="{Binding OpenAboutCommand}"/>
+    <KeyBinding Gesture="F2" Command="{Binding OpenSettingsCommand}"/>
     <KeyBinding Gesture="F3" Command="{Binding ForkBalanceCommand}"/>
 
   </Window.KeyBindings>
@@ -37,11 +38,12 @@
       <MenuItem Header="_Options">
         <MenuItem Header="_Settings"
                   InputGesture="F2"
-                  Command="{Binding SettingsCommand}"/>
+                  Command="{Binding OpenSettingsCommand}"/>
         <MenuItem Header="_Fork Balances"
                   InputGesture="F3"
                   Command="{Binding ForkBalanceCommand}"/>
-        <MenuItem Header="_About" Click="About_Click"
+        <MenuItem Header="_About"
+                  Command="{Binding OpenAboutCommand}"
                   InputGesture="F1"/>
         <Separator />
         <MenuItem Header="_Exit"
@@ -135,16 +137,27 @@
       </ListBox>
 
       <StackPanel Grid.Column="2">
-        <Button Content="+"
-                ToolTip.Tip="Add New"/>
-        <Button Content="D"
-                ToolTip.Tip="Remove Selected"/>
-        <Button Content="D"
-                ToolTip.Tip="Edit Selected"/>
-        <Button Content="U"
-                ToolTip.Tip="Move Up"/>
-        <Button Content="D"
-                ToolTip.Tip="Move Down"/>
+        <StackPanel.Styles>
+          <Style Selector="Button">
+            <Setter Property="Width" Value="55"/>
+          </Style>
+        </StackPanel.Styles>
+
+        <Button ToolTip.Tip="Add New">
+          <Image Source="/Assets/Add.png"/>
+        </Button>
+        <Button ToolTip.Tip="Remove Selected">
+          <Image Source="/Assets/Remove.png"/>
+        </Button>
+        <Button ToolTip.Tip="Edit Selected">
+          <Image Source="/Assets/Edit.png"/>
+        </Button>
+        <Button ToolTip.Tip="Move Up">
+          <Image Source="/Assets/MoveUp.png"/>
+        </Button>
+        <Button ToolTip.Tip="Move Down">
+          <Image Source="/Assets/MoveDown.png"/>
+        </Button>
       </StackPanel>
 
     </Grid>
