@@ -127,8 +127,8 @@ namespace WatchOnlyBitcoinWallet.ViewModels
         public BindableCommand OpenAboutCommand { get; private set; }
         private async void OpenAbout()
         {
-            //AboutViewModel vm = new($"({VersionString})", Clipboard);
-            //await WindowMan.ShowDialog(vm);
+            AboutViewModel vm = new($"({VersionString})", Clipboard);
+            await WindowMan.ShowDialog(vm);
         }
 
         public BindableCommand OpenSettingsCommand { get; private set; }

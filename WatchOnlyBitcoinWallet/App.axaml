@@ -12,6 +12,9 @@
   </Application.Styles>
 
   <Application.DataTemplates>
+    <DataTemplate DataType="{x:Type vm:AboutViewModel}">
+      <views:AboutView/>
+    </DataTemplate>
     <DataTemplate DataType="{x:Type vm:SettingsViewModel}">
       <views:SettingsView/>
     </DataTemplate>

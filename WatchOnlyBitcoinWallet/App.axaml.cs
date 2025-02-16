@@ -6,6 +6,7 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using System.Diagnostics;
 using WatchOnlyBitcoinWallet.ViewModels;
 
 namespace WatchOnlyBitcoinWallet
@@ -21,10 +22,14 @@ namespace WatchOnlyBitcoinWallet
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
+                MainWindowViewModel vm = new();
                 desktop.MainWindow = new MainWindow
                 {
-                    DataContext = new MainWindowViewModel()
+                    DataContext = vm
                 };
+
+                Debug.Assert(desktop.MainWindow.Clipboard is not null);
+                vm.Clipboard = desktop.MainWindow.Clipboard;
             }
 
             base.OnFrameworkInitializationCompleted();

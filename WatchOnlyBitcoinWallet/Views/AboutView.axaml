@@ -1,0 +1,73 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:WatchOnlyBitcoinWallet.ViewModels"
+             mc:Ignorable="d"
+             x:Class="WatchOnlyBitcoinWallet.Views.AboutView"
+             Height="285" Width="300"
+             FontSize="14">
+
+  <Design.DataContext>
+    <vm:AboutViewModel/>
+  </Design.DataContext>
+
+  <Grid RowDefinitions="auto,auto,auto,auto,auto,auto,*">
+    <TextBlock Text="Watch Only Bitcoin Wallet" VerticalAlignment="Top"
+               FontFamily="Comic Sans MS" FontSize="22" FontWeight="Bold"
+               HorizontalAlignment="Center"
+               Margin="0,10,0,0"
+               Grid.Row="0"/>
+    <TextBlock Text="{Binding VersionString}"
+               FontFamily="Comic Sans MS" FontSize="18" FontWeight="Bold"
+               HorizontalAlignment="Center"
+               Grid.Row="1"/>
+    <TextBlock Text="by Coding Enthusiast"
+               FontFamily="Comic Sans MS" FontSize="16" FontWeight="Bold"
+               HorizontalAlignment="Center"
+               Grid.Row="2"/>
+    <TextBlock Text="Button icons by icons8.com"
+               FontFamily="Comic Sans MS" FontSize="12" FontWeight="Bold"
+               Margin="0,10,0,0"
+               HorizontalAlignment="Center"
+               Grid.Row="3"/>
+
+    <HyperlinkButton Content="Github Repository Link"
+                     NavigateUri="https://github.com/Coding-Enthusiast/Watch-Only-Bitcoin-Wallet"
+                     Margin="0,15,0,0"
+                     Grid.Row="4"/>
+
+    <HyperlinkButton Content="BitcoinTalk.org Announcement Link"
+                     NavigateUri="https://bitcointalk.org/index.php?topic=1616888.0"
+                     Grid.Row="5"/>
+
+    <Grid ColumnDefinitions="*,auto,auto" RowDefinitions="auto,auto" Grid.Row="6">
+      <TextBox Text="{Binding Address1}"
+               IsReadOnly="True"
+               FontSize="11"
+               Margin="3"
+               Grid.Column="0" Grid.Row="0"/>
+      <Button Content="Copy"
+              Command="{Binding CopyCommand}"
+              CommandParameter="{Binding Address1}"
+              Grid.Column="1" Grid.Row="0"/>
+      <HyperlinkButton Content="Donate"
+                       NavigateUri="{Binding DonateUri1}"
+                       Grid.Column="2" Grid.Row="0"/>
+
+      <TextBox Text="{Binding Address2}"
+               IsReadOnly="True"
+               FontSize="11"
+               Margin="3"
+               Grid.Column="0" Grid.Row="1"/>
+      <Button Content="Copy"
+              Command="{Binding CopyCommand}"
+              CommandParameter="{Binding Address2}"
+              Grid.Column="1" Grid.Row="1"/>
+      <HyperlinkButton Content="Donate"
+                       NavigateUri="{Binding DonateUri2}"
+                       Grid.Column="2" Grid.Row="1"/>
+    </Grid>
+
+  </Grid>
+</UserControl>

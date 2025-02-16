@@ -15,13 +15,6 @@ namespace WatchOnlyBitcoinWallet
             InitializeComponent();
         }
 
-        private void About_Click(object sender, RoutedEventArgs e)
-        {
-            AboutWindow myWin = new AboutWindow();
-            //myWin.Owner = this;
-            //myWin.ShowDialog();
-        }
-
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
