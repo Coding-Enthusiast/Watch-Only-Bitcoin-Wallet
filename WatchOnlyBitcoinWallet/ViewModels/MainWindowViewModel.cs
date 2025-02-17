@@ -22,11 +22,12 @@ namespace WatchOnlyBitcoinWallet.ViewModels
         public MainWindowViewModel()
         {
             WindowMan = new WindowManager();
+            FileMan = new FileManager();
 
-            AddressList = new BindingList<BitcoinAddress>(DataManager.ReadFile<List<BitcoinAddress>>(DataManager.FileType.Wallet));
+            AddressList = new BindingList<BitcoinAddress>(FileMan.ReadWalletFile());
             AddressList.ListChanged += AddressList_ListChanged;
 
-            SettingsInstance = DataManager.ReadFile<SettingsModel>(DataManager.FileType.Settings);
+            SettingsInstance = FileMan.ReadSettingsFile();
 
             GetBalanceCommand = new BindableCommand(GetBalance, () => !IsReceiving);
             OpenAboutCommand = new BindableCommand(OpenAbout);
@@ -36,7 +37,7 @@ namespace WatchOnlyBitcoinWallet.ViewModels
             ImportFromTextCommand = new BindableCommand(ImportFromText);
             ImportFromFileCommand = new BindableCommand(ImportFromFile);
 
-            var ver = Assembly.GetExecutingAssembly().GetName().Version;
+            Version ver = Assembly.GetExecutingAssembly().GetName().Version ?? new Version();
             VersionString = string.Format("Version {0}.{1}.{2}", ver.Major, ver.Minor, ver.Build);
         }
 
@@ -65,6 +66,7 @@ namespace WatchOnlyBitcoinWallet.ViewModels
 
         public IWindowManager WindowMan { get; set; }
         public IClipboard Clipboard { get; set; }
+        public IFileManager FileMan { get; set; }
 
 
         /// <summary>
