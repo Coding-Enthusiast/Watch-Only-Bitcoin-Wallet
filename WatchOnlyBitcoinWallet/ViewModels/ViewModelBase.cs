@@ -3,47 +3,42 @@
 // Distributed under the MIT software license, see the accompanying
 // file LICENCE or http://www.opensource.org/licenses/mit-license.php.
 
+using System;
 using WatchOnlyBitcoinWallet.MVVM;
 
 namespace WatchOnlyBitcoinWallet.ViewModels
 {
     public class ViewModelBase : InpcBase
     {
-        /// <summary>
-        /// Used for changing the visibility of error message TextBox.
-        /// </summary>
+        public event EventHandler? CLoseEvent;
+
+        public void RaiseCloseEvent() => CLoseEvent?.Invoke(this, EventArgs.Empty);
+
+        private bool _isErrVisible;
         public bool IsErrorMsgVisible
         {
-            get => isErrorMsgVisible;
-            private set => SetField(ref isErrorMsgVisible, value);
+            get => _isErrVisible;
+            private set => SetField(ref _isErrVisible, value);
         }
-        private bool isErrorMsgVisible;
 
-        /// <summary>
-        /// String containing all the errors.
-        /// </summary>
+        private string _errors = string.Empty;
         public string Errors
         {
-            get => errors;
+            get => _errors;
             set
             {
-                if (SetField(ref errors, value))
+                if (SetField(ref _errors, value))
                 {
                     IsErrorMsgVisible = !string.IsNullOrEmpty(value);
                 }
             }
         }
-        private string errors;
 
-        /// <summary>
-        /// Status, showing current action being performed.
-        /// </summary>
+        private string _status = string.Empty;
         public string Status
         {
-            get => status;
-            set => SetField(ref status, value);
+            get => _status;
+            set => SetField(ref _status, value);
         }
-        private string status;
-
     }
 }

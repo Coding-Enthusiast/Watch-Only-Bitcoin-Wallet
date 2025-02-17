@@ -39,6 +39,8 @@ namespace WatchOnlyBitcoinWallet.Services
                 Title = vm.GetType().Name.Replace("ViewModel", ""),
             };
 
+            vm.CLoseEvent += (s, e) => win.Close();
+
             var lf = (IClassicDesktopStyleApplicationLifetime?)Application.Current?.ApplicationLifetime;
             Debug.Assert(lf is not null);
             Debug.Assert(lf.MainWindow is not null);
