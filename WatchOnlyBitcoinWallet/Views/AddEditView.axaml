@@ -1,0 +1,40 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:WatchOnlyBitcoinWallet.ViewModels"
+             mc:Ignorable="d"
+             x:Class="WatchOnlyBitcoinWallet.Views.AddEditView"
+             Height="110" Width="480"
+             FontSize="14">
+
+  <Design.DataContext>
+    <vm:AboutViewModel/>
+  </Design.DataContext>
+
+  <Grid ColumnDefinitions="400,*" RowDefinitions="auto,auto,*">
+    <TextBox Text="{Binding AddressString}"
+             Watermark="Enter a valid bitcoin address"
+             Margin="2"
+             Grid.Column="0" Grid.Row="0"/>
+    <TextBox Text="{Binding Tag}"
+             Watermark="[Optional] Enter a name for this address"
+             Margin="2"
+             Grid.Column="0" Grid.Row="1"/>
+    <TextBlock Text="{Binding Error}"
+               Grid.Column="0" Grid.Row="2"/>
+
+    <Button Content="OK"
+            Command="{Binding OkCommand}"
+            HorizontalContentAlignment="Center"
+            IsDefault="True"
+            Width="65"
+            Grid.Column="1" Grid.Row="0"/>
+    <Button Content="Cancel"
+            Command="{Binding CancelCommand}"
+            HorizontalContentAlignment="Center"
+            IsCancel="True"
+            Width="65"
+            Grid.Column="1" Grid.Row="1"/>
+  </Grid>
+</UserControl>
