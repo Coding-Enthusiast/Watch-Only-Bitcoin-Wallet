@@ -291,7 +291,7 @@ namespace WatchOnlyBitcoinWallet.ViewModels
         public BindableCommand AddCommand { get; }
         public async void Add()
         {
-            AddEditViewModel vm = new();
+            AddEditViewModel vm = new(AddressList);
             await WindowMan.ShowDialog(vm);
             if (vm.IsChanged)
             {
@@ -324,12 +324,7 @@ namespace WatchOnlyBitcoinWallet.ViewModels
         {
             if (SelectedAddress is not null)
             {
-                AddEditViewModel vm = new()
-                {
-                    AddressString = SelectedAddress.Address,
-                    Tag = SelectedAddress.Name
-                };
-
+                AddEditViewModel vm = new(SelectedAddress.Address, SelectedAddress.Name, Array.Empty<BitcoinAddress>());
                 await WindowMan.ShowDialog(vm);
                 if (vm.IsChanged)
                 {
@@ -337,7 +332,7 @@ namespace WatchOnlyBitcoinWallet.ViewModels
                     SelectedAddress.Name = vm.Tag;
 
                     SaveWallet();
-                } 
+                }
             }
             else
             {

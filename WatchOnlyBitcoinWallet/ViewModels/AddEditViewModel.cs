@@ -5,18 +5,32 @@
 
 using Autarkysoft.Bitcoin;
 using Autarkysoft.Bitcoin.Encoders;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using WatchOnlyBitcoinWallet.Models;
 using WatchOnlyBitcoinWallet.MVVM;
 
 namespace WatchOnlyBitcoinWallet.ViewModels
 {
     public class AddEditViewModel : ViewModelBase
     {
-        public AddEditViewModel() : this(string.Empty, string.Empty)
+        /// <summary>
+        /// Make designer happy!
+        /// </summary>
+        public AddEditViewModel() : this(string.Empty, string.Empty, Array.Empty<BitcoinAddress>())
         {
         }
 
-        public AddEditViewModel(string addr, string tag)
+
+
+        public AddEditViewModel(IList<BitcoinAddress> addrList) : this(string.Empty, string.Empty, addrList)
         {
+        }
+
+        public AddEditViewModel(string addr, string tag, IList<BitcoinAddress> addrList)
+        {
+            addresses = addrList;
             // Set fields since we don't want to change IsChanged to true.
             _addr = addr;
             _tag = tag;
@@ -26,6 +40,7 @@ namespace WatchOnlyBitcoinWallet.ViewModels
         }
 
 
+        private readonly IList<BitcoinAddress> addresses;
         public bool IsChanged { get; private set; } = false;
 
         private string _addr;
@@ -69,6 +84,10 @@ namespace WatchOnlyBitcoinWallet.ViewModels
             if (type is AddressType.Unknown or AddressType.Invalid)
             {
                 Error = "Invalid address type.";
+            }
+            else if (addresses.Any(x => x.Address == AddressString))
+            {
+                Error = "Wallet already contains the given address.";
             }
             else
             {
