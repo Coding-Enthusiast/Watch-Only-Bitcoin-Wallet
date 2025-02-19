@@ -34,7 +34,7 @@
 
   <Grid RowDefinitions="auto,*,auto">
 
-    <Menu Background="LightGray" Grid.Row="0">
+    <Menu Background="GhostWhite" Grid.Row="0">
       <MenuItem Header="_Options">
         <MenuItem Header="_Settings"
                   InputGesture="F2"
@@ -105,7 +105,11 @@
         </TextBlock>
       </Grid>
 
-      <ListBox ItemsSource="{Binding AddressList}" Margin="3" Grid.Column="1">
+      <ListBox ItemsSource="{Binding AddressList}"
+               SelectedItem="{Binding SelectedAddress}"
+               SelectedIndex="{Binding SelectedIndex}"
+               Margin="3" Grid.Column="1">
+        
         <ListBox.Template>
           <ControlTemplate>
             <DockPanel LastChildFill="True">
@@ -143,19 +147,19 @@
           </Style>
         </StackPanel.Styles>
 
-        <Button ToolTip.Tip="Add New">
+        <Button ToolTip.Tip="Add New" Command="{Binding AddCommand}">
           <Image Source="/Assets/Add.png"/>
         </Button>
-        <Button ToolTip.Tip="Remove Selected">
+        <Button ToolTip.Tip="Remove Selected" Command="{Binding RemoveCommand}">
           <Image Source="/Assets/Remove.png"/>
         </Button>
-        <Button ToolTip.Tip="Edit Selected">
+        <Button ToolTip.Tip="Edit Selected" Command="{Binding EditCommand}">
           <Image Source="/Assets/Edit.png"/>
         </Button>
-        <Button ToolTip.Tip="Move Up">
+        <Button ToolTip.Tip="Move Up" Command="{Binding MoveUpCommand}">
           <Image Source="/Assets/MoveUp.png"/>
         </Button>
-        <Button ToolTip.Tip="Move Down">
+        <Button ToolTip.Tip="Move Down" Command="{Binding MoveDownCommand}">
           <Image Source="/Assets/MoveDown.png"/>
         </Button>
       </StackPanel>
