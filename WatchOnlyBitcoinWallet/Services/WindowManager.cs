@@ -63,20 +63,4 @@ namespace WatchOnlyBitcoinWallet.Services
             throw new NotImplementedException();
         }
     }
-
-    public class ImportWindowManager : IWindowManager
-    {
-        public void Show(ViewModelBase ViewModel)
-        {
-            ImportWindow myWin = new ImportWindow();
-            myWin.DataContext = ViewModel;
-            ((ImportViewModel)ViewModel).ClosingRequest += (sender, e) => myWin.Close();
-            //myWin.Owner = Application.Current.MainWindow;
-            //myWin.ShowDialog();
-        }
-        public Task ShowDialog(ViewModelBase vm)
-        {
-            throw new NotImplementedException();
-        }
-    }
 }

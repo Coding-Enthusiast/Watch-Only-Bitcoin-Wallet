@@ -1,0 +1,41 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:WatchOnlyBitcoinWallet.ViewModels"
+             mc:Ignorable="d"
+             x:Class="WatchOnlyBitcoinWallet.Views.ImportView"
+             Height="350" Width="460"
+             FontSize="14">
+
+  <Design.DataContext>
+    <vm:ImportViewModel/>
+  </Design.DataContext>
+
+  <Grid ColumnDefinitions="*,auto" RowDefinitions="auto,2*,*">
+    <TextBlock Text="{Binding Note}"
+               VerticalAlignment="Center"
+               Margin="3"
+               Grid.Column="0" Grid.Row="0"/>
+
+    <StackPanel Orientation="Vertical" Spacing="3" Margin="3" Grid.Column="1" Grid.Row="0">
+      <Button Content="Import"
+              Command="{Binding ImportCommand}"
+              Width="70"/>
+      <Button Content="Open"
+              Command="{Binding OpenCommand}"
+              Width="70"/>
+    </StackPanel>
+
+    <TextBox Text="{Binding ImportText}"
+             AcceptsReturn="True"
+             ScrollViewer.VerticalScrollBarVisibility="Visible"
+             TextWrapping="Wrap"
+             Margin="3"
+             Grid.ColumnSpan="2" Grid.Row="1"/>
+
+    <TextBlock Text="{Binding Errors}"
+               TextWrapping="Wrap"
+               Grid.ColumnSpan="2" Grid.Row="2"/>
+  </Grid>
+</UserControl>

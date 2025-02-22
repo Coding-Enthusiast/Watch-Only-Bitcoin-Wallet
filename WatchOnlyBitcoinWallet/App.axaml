@@ -18,12 +18,17 @@
     <DataTemplate DataType="{x:Type vm:AddEditViewModel}">
       <views:AddEditView/>
     </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:ImportViewModel}">
+      <views:ImportView/>
+    </DataTemplate>
     <DataTemplate DataType="{x:Type vm:SettingsViewModel}">
       <views:SettingsView/>
     </DataTemplate>
   </Application.DataTemplates>
 
-  <Application.Resources>
-
-  </Application.Resources>
+  <Application.Styles>
+    <Style Selector="Button">
+      <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    </Style>
+  </Application.Styles>
 </Application>

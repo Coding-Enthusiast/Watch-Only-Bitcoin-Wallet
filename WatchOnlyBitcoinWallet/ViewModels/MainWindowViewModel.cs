@@ -32,7 +32,7 @@ namespace WatchOnlyBitcoinWallet.ViewModels
             OpenSettingsCommand = new BindableCommand(OpenSettings);
             ForkBalanceCommand = new BindableCommand(ForkBalance);
 
-            ImportFromTextCommand = new BindableCommand(ImportFromText);
+            ImportCommand = new BindableCommand(Import);
             ImportFromFileCommand = new BindableCommand(ImportFromFile);
 
             AddCommand = new(Add);
@@ -83,49 +83,28 @@ namespace WatchOnlyBitcoinWallet.ViewModels
         public SettingsModel SettingsInstance { get; }
         public string VersionString { get; }
 
-        /// <summary>
-        /// Indicating an active connection.
-        /// <para/> Used to enable/disable buttons
-        /// </summary>
+
+        private bool _isReceiving;
         public bool IsReceiving
         {
-            get { return isReceiving; }
+            get => _isReceiving;
             set
             {
-                if (SetField(ref isReceiving, value))
+                if (SetField(ref _isReceiving, value))
                 {
                     GetBalanceCommand.RaiseCanExecuteChanged();
                 }
             }
         }
-        private bool isReceiving;
 
 
-        public decimal BitcoinBalance
-        {
-            get
-            {
-                return AddressList.Sum(x => (decimal)x.Balance);
-            }
-        }
+        public decimal BitcoinBalance => AddressList.Sum(x => x.Balance);
 
-        [DependsOnProperty(new string[] { "BitcoinBalance", "SettingsInstance" })]
-        public decimal BitcoinBalanceUSD
-        {
-            get
-            {
-                return BitcoinBalance * SettingsInstance.BitcoinPriceInUSD;
-            }
-        }
+        [DependsOnProperty(nameof(BitcoinBalance))]
+        public decimal BitcoinBalanceUSD => BitcoinBalance * SettingsInstance.BitcoinPriceInUSD;
 
-        [DependsOnProperty(new string[] { "BitcoinBalance", "SettingsInstance" })]
-        public decimal BitcoinBalanceLC
-        {
-            get
-            {
-                return BitcoinBalanceUSD * SettingsInstance.DollarPriceInLocalCurrency;
-            }
-        }
+        [DependsOnProperty(nameof(BitcoinBalance))]
+        public decimal BitcoinBalanceLC => BitcoinBalanceUSD * SettingsInstance.DollarPriceInLocalCurrency;
 
 
         private void SaveWallet()
@@ -149,7 +128,7 @@ namespace WatchOnlyBitcoinWallet.ViewModels
                 }
             }
 
-            await Task.Delay(TimeSpan.FromSeconds(10));
+            await Task.Delay(TimeSpan.FromSeconds(3));
             lock (lockObj)
             {
                 SaveWallet();
@@ -184,17 +163,20 @@ namespace WatchOnlyBitcoinWallet.ViewModels
         }
 
 
-        public BindableCommand ImportFromTextCommand { get; private set; }
-        private void ImportFromText()
+        public BindableCommand ImportCommand { get; private set; }
+        private async void Import()
         {
-            IWindowManager winManager = new ImportWindowManager();
-            ImportViewModel vm = new ImportViewModel();
-            winManager.Show(vm);
-
-            if (vm.AddressList != null && vm.AddressList.Count != 0)
+            ImportViewModel vm = new(AddressList);
+            await WindowMan.ShowDialog(vm);
+            if (vm.IsChanged)
             {
-                vm.AddressList.ForEach(x => AddressList.Add(x));
-                Status = string.Format("Successfully added {0} addresses.", vm.AddressList.Count);
+                foreach (var item in vm.Result)
+                {
+                    Debug.Assert(AddressList.All(x => x.Name != item.Name));
+                    AddressList.Add(item);
+                }
+                SaveWallet();
+                Status = $"Successfully added {vm.Result.Count} addresses.";
             }
         }
 
@@ -248,11 +230,6 @@ namespace WatchOnlyBitcoinWallet.ViewModels
         public BindableCommand GetBalanceCommand { get; private set; }
         private async void GetBalance()
         {
-            if (!AddressList.ToList().TrueForAll(x => !x.HasErrors))
-            {
-                Errors = "Fix the errors in addresses first!";
-                return;
-            }
             Status = "Updating Balances...";
             Errors = string.Empty;
             IsReceiving = true;

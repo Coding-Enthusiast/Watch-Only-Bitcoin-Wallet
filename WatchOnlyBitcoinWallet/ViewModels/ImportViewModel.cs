@@ -3,40 +3,43 @@
 // Distributed under the MIT software license, see the accompanying
 // file LICENCE or http://www.opensource.org/licenses/mit-license.php.
 
+using Autarkysoft.Bitcoin;
+using Autarkysoft.Bitcoin.Encoders;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using WatchOnlyBitcoinWallet.Models;
 using WatchOnlyBitcoinWallet.MVVM;
-using WatchOnlyBitcoinWallet.Services;
 
 namespace WatchOnlyBitcoinWallet.ViewModels
 {
     public class ImportViewModel : ViewModelBase
     {
-        public ImportViewModel()
+        /// <summary>
+        /// Make designer happy!
+        /// </summary>
+        public ImportViewModel() : this(Array.Empty<BitcoinAddress>())
         {
+        }
+
+        public ImportViewModel(IList<BitcoinAddress> addrList)
+        {
+            addresses = addrList;
             ImportCommand = new BindableCommand(CheckAndImport);
         }
 
 
-        public string Note
-        {
-            get
-            {
-                return "Note: 1 address per line (seperated by a new line).";
-            }
-        }
+        public static string Note => $"Enter 1 address per line.{Environment.NewLine}" +
+                                     $"Add the optional name at the end separated by comma.{Environment.NewLine}" +
+                                     $"Example: address,name";
 
 
-        public List<BitcoinAddress> AddressList { get; set; }
+        private readonly IList<BitcoinAddress> addresses;
+        public bool IsChanged { get; private set; } = false;
+        public List<BitcoinAddress> Result { get; } = new();
 
 
-        private string importText;
-        public string ImportText
-        {
-            get { return importText; }
-            set { SetField(ref importText, value); }
-        }
+        public string ImportText { get; set; } = string.Empty;
 
 
         public BindableCommand ImportCommand { get; private set; }
@@ -49,52 +52,32 @@ namespace WatchOnlyBitcoinWallet.ViewModels
             }
             else
             {
-                List<BitcoinAddress> temp = new List<BitcoinAddress>();
-                int lineNum = 0;
-                foreach (var item in ImportText.SplitToLines())
+                string[] lines = ImportText.ReplaceLineEndings()
+                                           .Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                for (int i = 0; i < lines.Length; i++)
                 {
-                    lineNum++;
-                    VerificationResult vr = ValidateAddr(item);
-                    if (vr.IsVerified)
+                    int index = lines[i].IndexOf(',');
+                    string addr = lines[i].Substring(0, index > 0 ? index : lines[i].Length);
+                    string name = index > 0 ? lines[i].Substring(index + 1).Trim() : string.Empty;
+
+                    AddressType type = Address.GetAddressType(addr, NetworkType.MainNet);
+                    if (type is AddressType.Unknown or AddressType.Invalid)
                     {
-                        temp.Add(new BitcoinAddress() { Address = item });
+                        Errors = $"Address on the {(i + 1).ToOrdinal()} line ({addr}) is invalid.";
+                        return;
                     }
-                    else
+                    else if (addresses.Any(x => x.Address == addr))
                     {
-                        Errors = string.Format("Invalid address on line {0}: {1}", lineNum, vr.Error);
-                        break;
+                        Errors = $"Wallet already contains the address on the {(i + 1).ToOrdinal()} line ({addr}).";
+                        return;
                     }
+
+                    Result.Add(new BitcoinAddress(addr, name));
                 }
-                if (string.IsNullOrEmpty(Errors))
-                {
-                    AddressList = temp;
-                    OnClosingRequest();
-                }
+
+                IsChanged = true;
+                RaiseCloseEvent();
             }
         }
-        private VerificationResult ValidateAddr(string addr)
-        {
-            VerificationResult vr = new VerificationResult();
-            if (addr.StartsWith("bc1"))
-            {
-                vr = SegWitAddress.Verify(addr, SegWitAddress.NetworkType.MainNet);
-            }
-            else
-            {
-                vr = Base58.Verify(addr);
-            }
-            return vr;
-        }
-
-        public event EventHandler ClosingRequest;
-
-        protected void OnClosingRequest()
-        {
-            if (ClosingRequest != null)
-            {
-                ClosingRequest(this, EventArgs.Empty);
-            }
-        }
-
     }
 }

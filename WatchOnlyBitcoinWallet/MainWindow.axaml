@@ -12,7 +12,7 @@
         x:CompileBindings="True"
         x:DataType="vm:MainWindowViewModel"
         Title="Watch Only Bitcoin Wallet - Version 4"
-        Height="340" Width="740"
+        Height="370" Width="740"
         CanResize="False"
         Icon="/Assets/Icon.png"
         WindowStartupLocation="CenterScreen" FontSize="14">
@@ -51,11 +51,8 @@
                   InputGesture="Alt+F4"/>
       </MenuItem>
       <MenuItem Header="_Import">
-        <MenuItem Header="From _text"
-                  Command="{Binding ImportFromTextCommand}"/>
-        <MenuItem Header="From _file"
-                  Command="{Binding ImportFromFileCommand}"
-                  ToolTip.Tip="Addresses in the file should be separated by a new line."/>
+        <MenuItem Header="From _text or file"
+                  Command="{Binding ImportCommand}"/>
       </MenuItem>
     </Menu>
 
@@ -147,6 +144,9 @@
           </Style>
         </StackPanel.Styles>
 
+        <Button ToolTip.Tip="Import (multi)" Command="{Binding ImportCommand}">
+          <Image Source="/Assets/Import.png"/>
+        </Button>
         <Button ToolTip.Tip="Add New" Command="{Binding AddCommand}">
           <Image Source="/Assets/Add.png"/>
         </Button>

@@ -5,63 +5,65 @@
 
 using Newtonsoft.Json;
 using System.Collections.Generic;
-using WatchOnlyBitcoinWallet.ViewModels;
+using WatchOnlyBitcoinWallet.MVVM;
 
 namespace WatchOnlyBitcoinWallet.Models
 {
-    public class BitcoinAddress : ValidatableBase
+    public class BitcoinAddress : InpcBase
     {
-        private string name;
+        public BitcoinAddress()
+        {
+        }
+
+        public BitcoinAddress(string addr, string tag)
+        {
+            Address = addr;
+            Name = tag;
+        }
+
+        private string _name = string.Empty;
         /// <summary>
         /// Name acts as a tag for the address
         /// </summary>
         public string Name
         {
-            get { return name; }
-            set { SetField(ref name, value); }
+            get => _name;
+            set => SetField(ref _name, value);
         }
 
-        private string address;
+        private string _address = string.Empty;
         public string Address
         {
-            get { return address; }
-            set
-            {
-                if (SetField(ref address, value))
-                {
-                    Validate(value);
-                }
-            }
+            get => _address;
+            set => SetField(ref _address, value);
         }
 
-        private decimal balance;
+        private decimal _balance;
         public decimal Balance
         {
-            get { return balance; }
-            set { SetField(ref balance, value); }
+            get => _balance;
+            set => SetField(ref _balance, value);
         }
 
-        private decimal difference;
+        private decimal _diff;
         [JsonIgnore]
         public decimal Difference
         {
-            get { return difference; }
-            set { SetField(ref difference, value); }
+            get => _diff;
+            set => SetField(ref _diff, value);
         }
 
-        private decimal forkBalance;
+        private decimal _forkBalance;
         /// <summary>
         /// Total balance that was available by the time of fork
         /// </summary>
         [JsonIgnore]
         public decimal ForkBalance
         {
-            get { return forkBalance; }
-            set { SetField(ref forkBalance, value); }
+            get => _forkBalance;
+            set => SetField(ref _forkBalance, value);
         }
 
-
-        public List<Transaction> TransactionList { get; set; }
-
+        public List<Transaction> TransactionList { get; set; } = new();
     }
 }
