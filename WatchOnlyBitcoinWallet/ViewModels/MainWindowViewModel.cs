@@ -154,12 +154,10 @@ namespace WatchOnlyBitcoinWallet.ViewModels
 
 
         public BindableCommand ForkBalanceCommand { get; private set; }
-        private void ForkBalance()
+        private async void ForkBalance()
         {
-            IWindowManager winManager = new ForkBalanceWindowManager();
-            ForkBalanceViewModel vm = new ForkBalanceViewModel();
-            vm.AddressList = new ObservableCollection<BitcoinAddress>(AddressList);
-            winManager.Show(vm);
+            ForkBalanceViewModel vm = new(AddressList, FileMan);
+            await WindowMan.ShowDialog(vm);
         }
 
 
