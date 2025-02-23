@@ -5,7 +5,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using WatchOnlyBitcoinWallet.Models;
 using WatchOnlyBitcoinWallet.MVVM;
@@ -17,10 +16,18 @@ namespace WatchOnlyBitcoinWallet.ViewModels
 {
     public class ForkBalanceViewModel : ViewModelBase
     {
-        public ForkBalanceViewModel()
+        /// <summary>
+        /// Make designer happy!
+        /// </summary>
+        public ForkBalanceViewModel() : this(Array.Empty<BitcoinAddress>(), new FileManager())
         {
-            ForkHeightList = new ObservableCollection<ForkHeights>(Enum.GetValues(typeof(ForkHeights)).Cast<ForkHeights>());
+        }
 
+        public ForkBalanceViewModel(IList<BitcoinAddress> addrList, IFileManager fileManager)
+        {
+            AddressList = addrList.ToList();
+            fileMan = fileManager;
+            ForkHeightList = EnumHelper.GetAllEnumValues<ForkHeights>().ToArray();
             GetTransactionsCommand = new BindableCommand(GetTransactions, () => !IsReceiving);
         }
 
@@ -40,28 +47,21 @@ namespace WatchOnlyBitcoinWallet.ViewModels
         }
 
 
-        public string Note
-        {
-            get
-            {
-                return "Note: Balances are only based on bitcoin blockchain and transactions there, assuming coins are not already spent on other chains.";
-            }
-        }
+        public string Note => "Note: Balances are only based on bitcoin blockchain and transactions there, assuming coins are not already spent on other chains.";
 
 
-        public ObservableCollection<BitcoinAddress> AddressList { get; set; }
+        private readonly IFileManager fileMan;
+        public List<BitcoinAddress> AddressList { get; }
+        public ForkHeights[] ForkHeightList { get; }
 
 
-        public ObservableCollection<ForkHeights> ForkHeightList { get; set; }
-
-
-        private ForkHeights selectedForkHeight;
+        private ForkHeights _selForkH;
         public ForkHeights SelectedForkHeight
         {
-            get { return selectedForkHeight; }
+            get => _selForkH;
             set
             {
-                if (SetField(ref selectedForkHeight, value))
+                if (SetField(ref _selForkH, value))
                 {
                     SelectedBlockHeight = (int)value;
                 }
@@ -69,56 +69,46 @@ namespace WatchOnlyBitcoinWallet.ViewModels
         }
 
 
-        private int selectedBlockHeight;
+        private int _selectedBlockH;
         public int SelectedBlockHeight
         {
-            get { return selectedBlockHeight; }
+            get => _selectedBlockH;
             set
             {
-                if (SetField(ref selectedBlockHeight, value))
+                if (SetField(ref _selectedBlockH, value))
                 {
-                    if (AddressList != null)
+                    foreach (var addr in AddressList)
                     {
-                        foreach (var addr in AddressList)
+                        if (addr.TransactionList != null)
                         {
-                            if (addr.TransactionList != null)
-                            {
-                                addr.ForkBalance = addr.TransactionList.Sum(x => x.BlockHeight > value ? 0 : x.Amount);
-                            }
-                            else
-                            {
-                                addr.ForkBalance = 0;
-                            }
-                            RaisePropertyChanged("Total");
+                            addr.ForkBalance = addr.TransactionList.Sum(x => x.BlockHeight > value ? 0 : x.Amount);
                         }
+                        else
+                        {
+                            addr.ForkBalance = 0;
+                        }
+                        RaisePropertyChanged(nameof(Total));
                     }
                 }
             }
         }
 
 
-        public decimal Total
-        {
-            get { return AddressList.Sum(x => x.ForkBalance); }
-        }
+        public decimal Total => AddressList.Sum(x => x.ForkBalance);
 
 
-        /// <summary>
-        /// Indicating an active connection.
-        /// <para/> Used to enable/disable buttons
-        /// </summary>
+        private bool _isReceiving;
         public bool IsReceiving
         {
-            get { return isReceiving; }
+            get => _isReceiving;
             set
             {
-                if (SetField(ref isReceiving, value))
+                if (SetField(ref _isReceiving, value))
                 {
                     GetTransactionsCommand.RaiseCanExecuteChanged();
                 }
             }
         }
-        private bool isReceiving;
 
 
 
@@ -173,8 +163,7 @@ namespace WatchOnlyBitcoinWallet.ViewModels
         }
         private void Save()
         {
-            DataManager.WriteFile(AddressList, DataManager.FileType.Wallet);
+            fileMan.WriteWallet(AddressList);
         }
-
     }
 }

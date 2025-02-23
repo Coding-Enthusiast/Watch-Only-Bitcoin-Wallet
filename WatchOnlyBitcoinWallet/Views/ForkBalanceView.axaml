@@ -1,0 +1,89 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:WatchOnlyBitcoinWallet.ViewModels"
+             xmlns:models="using:WatchOnlyBitcoinWallet.Models"
+             mc:Ignorable="d"
+             x:Class="WatchOnlyBitcoinWallet.Views.ForkBalanceView"
+             Height="300" Width="600"
+             FontSize="14">
+
+  <Design.DataContext>
+    <vm:ForkBalanceViewModel/>
+  </Design.DataContext>
+
+  <Grid RowDefinitions="auto,auto,*,auto,auto">
+    <TextBlock Text="{Binding Note}"
+               TextWrapping="Wrap"
+               Margin="5"
+               Grid.Row="0"/>
+
+    <StackPanel Orientation="Horizontal" Margin="5,5,5,0" Grid.Row="1">
+      <ComboBox ItemsSource="{Binding ForkHeightList}"
+                SelectedItem="{Binding SelectedForkHeight}"
+                Width="125"
+                Margin="0,0,5,0"/>
+      <TextBox Text="{Binding SelectedBlockHeight, UpdateSourceTrigger=PropertyChanged}"
+               Width="70"
+               Margin="0,0,5,0"/>
+      <TextBlock Text="Total:"
+                 VerticalAlignment="Center"
+                 Margin="0,0,5,0"/>
+      <TextBlock Text="{Binding Total}"
+                 VerticalAlignment="Center"
+                 MinWidth="150"
+                 Margin="0,0,40,0"/>
+      <Button Content="Update Txs"
+              Command="{Binding GetTransactionsCommand}"
+              Width="95"
+              Margin="0,0,5,0"/>
+    </StackPanel>
+
+    <ListBox ItemsSource="{Binding AddressList}" Height="130" Margin="5" Grid.Row="2">
+      <ListBox.Template>
+        <ControlTemplate>
+          <DockPanel LastChildFill="True">
+            <Grid DockPanel.Dock="Top" ColumnDefinitions="60,350,60,*">
+              <TextBlock Text="Name" HorizontalAlignment="Center" Grid.Column="0"/>
+              <TextBlock Text="Address" HorizontalAlignment="Center" Grid.Column="1"/>
+              <TextBlock Text="Balance" HorizontalAlignment="Center" Grid.Column="2"/>
+              <TextBlock Text="# tx" HorizontalAlignment="Center" Grid.Column="3"/>
+            </Grid>
+            <ScrollViewer>
+              <ItemsPresenter/>
+            </ScrollViewer>
+          </DockPanel>
+        </ControlTemplate>
+      </ListBox.Template>
+
+      <ListBox.DataTemplates>
+        <DataTemplate DataType="{x:Type models:BitcoinAddress}">
+          <Grid ColumnDefinitions="60,350,60,*">
+            <TextBlock Text="{Binding Name}" Grid.Column="0"/>
+            <TextBlock Text="{Binding Address}" Grid.Column="1"/>
+            <TextBlock Text="{Binding ForkBalance, StringFormat=\{0:N8\}}"
+                       HorizontalAlignment="Right"
+                       Margin="0,0,10,0"
+                       Grid.Column="2"/>
+            <TextBlock Text="{Binding TransactionList.Count, StringFormat=\{0:N0\}}"
+                       HorizontalAlignment="Center"
+                       Margin="0,0,10,0"
+                       Grid.Column="3"/>
+          </Grid>
+        </DataTemplate>
+      </ListBox.DataTemplates>
+    </ListBox>
+
+    <TextBlock Text="{Binding Errors}"
+               TextWrapping="Wrap"
+               ScrollViewer.VerticalScrollBarVisibility="Visible"
+               Grid.Row="3"/>
+
+    <TextBlock Text="{Binding Status}"
+               Height="25"
+               Background="LightGray"
+               FontFamily="Comic Sans MS"
+               Grid.Row="4"/>
+  </Grid>
+</UserControl>

@@ -6,27 +6,19 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
-using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using WatchOnlyBitcoinWallet.ViewModels;
-using WatchOnlyBitcoinWallet.Views;
 
 namespace WatchOnlyBitcoinWallet.Services
 {
     public interface IWindowManager
     {
-        void Show(ViewModelBase ViewModel);
         Task ShowDialog(ViewModelBase vm);
     }
 
     public class WindowManager : IWindowManager
     {
-        public void Show(ViewModelBase ViewModel)
-        {
-            throw new NotImplementedException();
-        }
-
         public Task ShowDialog(ViewModelBase vm)
         {
             Window win = new()
@@ -46,21 +38,6 @@ namespace WatchOnlyBitcoinWallet.Services
             Debug.Assert(lf.MainWindow is not null);
 
             return win.ShowDialog(lf.MainWindow);
-        }
-    }
-
-    public class ForkBalanceWindowManager : IWindowManager
-    {
-        public void Show(ViewModelBase ViewModel)
-        {
-            ForkBalanceWindow myWin = new ForkBalanceWindow();
-            myWin.DataContext = ViewModel;
-            //myWin.Owner = Application.Current.MainWindow;
-            //myWin.ShowDialog();
-        }
-        public Task ShowDialog(ViewModelBase vm)
-        {
-            throw new NotImplementedException();
         }
     }
 }

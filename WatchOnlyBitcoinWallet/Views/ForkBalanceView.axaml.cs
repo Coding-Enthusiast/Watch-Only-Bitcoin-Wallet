@@ -1,4 +1,4 @@
-﻿// WatchOnlyBitcoinWallet
+// WatchOnlyBitcoinWallet
 // Copyright (c) 2016 Coding Enthusiast
 // Distributed under the MIT software license, see the accompanying
 // file LICENCE or http://www.opensource.org/licenses/mit-license.php.
@@ -7,9 +7,9 @@ using Avalonia.Controls;
 
 namespace WatchOnlyBitcoinWallet.Views
 {
-    public partial class ForkBalanceWindow : Window
+    public partial class ForkBalanceView : UserControl
     {
-        public ForkBalanceWindow()
+        public ForkBalanceView()
         {
             InitializeComponent();
         }
