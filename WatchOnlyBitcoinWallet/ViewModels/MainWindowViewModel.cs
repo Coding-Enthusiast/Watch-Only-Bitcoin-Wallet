@@ -22,7 +22,10 @@ namespace WatchOnlyBitcoinWallet.ViewModels
         public MainWindowViewModel()
         {
             WindowMan = new WindowManager();
-            FileMan = new FileManager();
+            FileMan = new FileManager()
+            {
+                WinMan = WindowMan
+            };
 
             AddressList = new(FileMan.ReadWalletFile());
             SettingsInstance = FileMan.ReadSettingsFile();
@@ -77,7 +80,7 @@ namespace WatchOnlyBitcoinWallet.ViewModels
             }
         }
 
-        public IClipboard Clipboard { get; set; }
+        public IClipboard? Clipboard { get; set; }
         public IFileManager FileMan { get; set; }
         public IWindowManager WindowMan { get; set; }
         public SettingsModel SettingsInstance { get; }
@@ -140,6 +143,7 @@ namespace WatchOnlyBitcoinWallet.ViewModels
         public BindableCommand OpenAboutCommand { get; private set; }
         private async void OpenAbout()
         {
+            Debug.Assert(Clipboard is not null);
             AboutViewModel vm = new($"({VersionString})", Clipboard);
             await WindowMan.ShowDialog(vm);
         }
@@ -164,7 +168,7 @@ namespace WatchOnlyBitcoinWallet.ViewModels
         public BindableCommand ImportCommand { get; private set; }
         private async void Import()
         {
-            ImportViewModel vm = new(AddressList);
+            ImportViewModel vm = new(AddressList, FileMan);
             await WindowMan.ShowDialog(vm);
             if (vm.IsChanged)
             {

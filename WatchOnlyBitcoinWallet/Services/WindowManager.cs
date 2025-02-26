@@ -15,6 +15,7 @@ namespace WatchOnlyBitcoinWallet.Services
     public interface IWindowManager
     {
         Task ShowDialog(ViewModelBase vm);
+        Task<MessageBoxResult> ShowMessageBox(MessageBoxType mbType, string message);
     }
 
     public class WindowManager : IWindowManager
@@ -38,6 +39,29 @@ namespace WatchOnlyBitcoinWallet.Services
             Debug.Assert(lf.MainWindow is not null);
 
             return win.ShowDialog(lf.MainWindow);
+        }
+
+        public async Task<MessageBoxResult> ShowMessageBox(MessageBoxType mbType, string message)
+        {
+            MessageBoxViewModel vm = new(mbType, message);
+            Window win = new()
+            {
+                Content = vm,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                CanResize = false,
+                ShowInTaskbar = false,
+                SizeToContent = SizeToContent.WidthAndHeight,
+                Title = "Warning!",
+            };
+            vm.CLoseEvent += (s, e) => win.Close();
+
+            var lf = (IClassicDesktopStyleApplicationLifetime?)Application.Current?.ApplicationLifetime;
+            Debug.Assert(lf is not null);
+            Debug.Assert(lf.MainWindow is not null);
+
+            await win.ShowDialog(lf.MainWindow);
+
+            return vm.Result;
         }
     }
 }

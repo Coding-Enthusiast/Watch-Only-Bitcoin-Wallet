@@ -2,7 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:vm="using:WatchOnlyBitcoinWallet.ViewModels"
+             xmlns:vm="clr-namespace:WatchOnlyBitcoinWallet.ViewModels"
              mc:Ignorable="d"
              x:Class="WatchOnlyBitcoinWallet.Views.ImportView"
              Height="350" Width="460"
@@ -21,10 +21,10 @@
     <StackPanel Orientation="Vertical" Spacing="3" Margin="3" Grid.Column="1" Grid.Row="0">
       <Button Content="Import"
               Command="{Binding ImportCommand}"
-              Width="70"/>
-      <Button Content="Open"
+              Width="80"/>
+      <Button Content="Open txt"
               Command="{Binding OpenCommand}"
-              Width="70"/>
+              Width="80"/>
     </StackPanel>
 
     <TextBox Text="{Binding ImportText}"

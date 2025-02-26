@@ -3,16 +3,22 @@
 // Distributed under the MIT software license, see the accompanying
 // file LICENCE or http://www.opensource.org/licenses/mit-license.php.
 
+using Avalonia.Platform.Storage;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using WatchOnlyBitcoinWallet.Models;
 
 namespace WatchOnlyBitcoinWallet.Services
 {
     public interface IFileManager
     {
+        public Task<string[]> OpenFilePickerAsync();
+        public IStorageProvider? StorageProvider { get; set; }
+
         SettingsModel ReadSettingsFile();
         List<BitcoinAddress> ReadWalletFile();
         void WriteSettings(SettingsModel settings);
@@ -38,6 +44,48 @@ namespace WatchOnlyBitcoinWallet.Services
 
         private readonly string mainDir, walletPath, settingsPath;
 
+        public IWindowManager? WinMan { get; set; }
+        public IStorageProvider? StorageProvider { get; set; }
+
+
+        public async Task<string[]> OpenFilePickerAsync()
+        {
+            if (WinMan is null)
+            {
+                return ["WindowManager instance is not set (this is a bug)."];
+            }
+            if (StorageProvider is null)
+            {
+                await WinMan.ShowMessageBox(MessageBoxType.Ok, "StorageProvider is not set (this is a bug).");
+                return Array.Empty<string>();
+            }
+
+            FilePickerFileType fileType = new("txt")
+            {
+                Patterns = ["*.txt"]
+            };
+
+            FilePickerOpenOptions options = new()
+            {
+                AllowMultiple = false,
+                FileTypeFilter = [fileType],
+                Title = "Text files (.txt)"
+            };
+
+            try
+            {
+                IReadOnlyList<IStorageFile> dir = await StorageProvider.OpenFilePickerAsync(options);
+                if (dir != null && dir.Count > 0)
+                {
+                    return File.ReadAllLines(dir.ElementAt(0).Path.LocalPath);
+                }
+            }
+            catch (Exception ex)
+            {
+                await WinMan.ShowMessageBox(MessageBoxType.Ok, ex.Message);
+            }
+            return Array.Empty<string>();
+        }
 
         public static T? ReadFile<T>(string filePath)
         {

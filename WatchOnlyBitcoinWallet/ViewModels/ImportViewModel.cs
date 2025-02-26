@@ -18,14 +18,16 @@ namespace WatchOnlyBitcoinWallet.ViewModels
         /// <summary>
         /// Make designer happy!
         /// </summary>
-        public ImportViewModel() : this(Array.Empty<BitcoinAddress>())
+        public ImportViewModel() : this(Array.Empty<BitcoinAddress>(), new Services.FileManager())
         {
         }
 
-        public ImportViewModel(IList<BitcoinAddress> addrList)
+        public ImportViewModel(IList<BitcoinAddress> addrList, Services.IFileManager fileMan)
         {
             addresses = addrList;
+            this.fileMan = fileMan;
             ImportCommand = new BindableCommand(CheckAndImport);
+            OpenCommand = new BindableCommand(Open);
         }
 
 
@@ -35,11 +37,17 @@ namespace WatchOnlyBitcoinWallet.ViewModels
 
 
         private readonly IList<BitcoinAddress> addresses;
+        private readonly Services.IFileManager fileMan;
         public bool IsChanged { get; private set; } = false;
         public List<BitcoinAddress> Result { get; } = new();
 
 
-        public string ImportText { get; set; } = string.Empty;
+        private string _text = string.Empty;
+        public string ImportText
+        {
+            get => _text;
+            set => SetField(ref _text, value);
+        }
 
 
         public BindableCommand ImportCommand { get; private set; }
@@ -78,6 +86,14 @@ namespace WatchOnlyBitcoinWallet.ViewModels
                 IsChanged = true;
                 RaiseCloseEvent();
             }
+        }
+
+
+        public BindableCommand OpenCommand { get; }
+        private async void Open()
+        {
+            string[] res = await fileMan.OpenFilePickerAsync();
+            ImportText = string.Join(Environment.NewLine, res);
         }
     }
 }

@@ -30,6 +30,7 @@ namespace WatchOnlyBitcoinWallet
 
                 Debug.Assert(desktop.MainWindow.Clipboard is not null);
                 vm.Clipboard = desktop.MainWindow.Clipboard;
+                vm.FileMan.StorageProvider = desktop.MainWindow.StorageProvider;
             }
 
             base.OnFrameworkInitializationCompleted();
