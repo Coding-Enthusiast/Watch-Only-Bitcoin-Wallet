@@ -34,9 +34,7 @@ namespace WatchOnlyBitcoinWallet.ViewModels
             OpenAboutCommand = new BindableCommand(OpenAbout);
             OpenSettingsCommand = new BindableCommand(OpenSettings);
             ForkBalanceCommand = new BindableCommand(ForkBalance);
-
             ImportCommand = new BindableCommand(Import);
-            ImportFromFileCommand = new BindableCommand(ImportFromFile);
 
             AddCommand = new(Add);
             RemoveCommand = new(Remove, () => SelectedAddress is not null);
@@ -180,52 +178,6 @@ namespace WatchOnlyBitcoinWallet.ViewModels
                 SaveWallet();
                 Status = $"Successfully added {vm.Result.Count} addresses.";
             }
-        }
-
-
-        public BindableCommand ImportFromFileCommand { get; private set; }
-        private void ImportFromFile()
-        {
-            Response<string[]> resp = DataManager.OpenFileDialog();
-            if (resp.Errors.Any())
-            {
-                Errors = resp.Errors.GetErrors();
-                Status = "Encountered an error while reading from file!";
-            }
-            else if (resp.Result != null)
-            {
-                int addrCount = 0;
-                foreach (var s in resp.Result)
-                {
-                    // remove possible white space
-                    string addr = s.Replace(" ", "");
-
-                    VerificationResult vr = ValidateAddr(addr);
-                    if (vr.IsVerified)
-                    {
-                        AddressList.Add(new BitcoinAddress() { Address = addr });
-                        addrCount++;
-                    }
-                    else
-                    {
-                        Errors += Environment.NewLine + vr.Error + ": " + addr;
-                    }
-                }
-                Status = string.Format("Successfully added {0} addresses.", addrCount);
-            }
-        }
-        private VerificationResult ValidateAddr(string addr)
-        {
-            VerificationResult vr = new VerificationResult();
-            if (addr.StartsWith("bc1"))
-            {
-                vr = SegWitAddress.Verify(addr, SegWitAddress.NetworkType.MainNet);
-            }
-            else
-            {
-                vr = Base58.Verify(addr);
-            }
-            return vr;
         }
 
 
