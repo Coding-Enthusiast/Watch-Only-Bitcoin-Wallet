@@ -39,6 +39,7 @@ namespace WatchOnlyBitcoinWallet.ViewModels
             AddCommand = new(Add);
             RemoveCommand = new(Remove, () => SelectedAddress is not null);
             EditCommand = new(Edit, () => SelectedAddress is not null);
+            CopyCommand = new(Copy, () => SelectedAddress is not null);
             MoveUpCommand = new(MoveUp, () => SelectedIndex > 0);
             MoveDownCommand = new(MoveDown, () => SelectedIndex >= 0 && SelectedIndex < AddressList.Count - 1);
 
@@ -60,6 +61,7 @@ namespace WatchOnlyBitcoinWallet.ViewModels
                 {
                     RemoveCommand.RaiseCanExecuteChanged();
                     EditCommand.RaiseCanExecuteChanged();
+                    CopyCommand.RaiseCanExecuteChanged();
                 }
             }
         }
@@ -264,6 +266,23 @@ namespace WatchOnlyBitcoinWallet.ViewModels
 
                     SaveWallet();
                 }
+            }
+            else
+            {
+                Errors = "Nothing is selected!";
+            }
+        }
+
+        public BindableCommand CopyCommand { get; }
+        private void Copy()
+        {
+            if (Clipboard is null)
+            {
+                Errors = "Clipboard object is not set (this is a bug!).";
+            }
+            else if (SelectedAddress is not null)
+            {
+                Clipboard.SetTextAsync(SelectedAddress.Address);
             }
             else
             {

@@ -12,7 +12,7 @@
         x:CompileBindings="True"
         x:DataType="vm:MainWindowViewModel"
         Title="Watch Only Bitcoin Wallet - Version 4"
-        Height="370" Width="740"
+        Height="412" Width="750"
         CanResize="False"
         Icon="/Assets/Icon.png"
         WindowStartupLocation="CenterScreen" FontSize="14">
@@ -56,7 +56,7 @@
       </MenuItem>
     </Menu>
 
-    <Grid Margin="3" ColumnDefinitions="*,530,auto" Grid.Row="1">
+    <Grid Margin="3" ColumnDefinitions="130,*,auto" Grid.Row="1">
       <Grid ColumnDefinitions="auto,*"
             RowDefinitions="auto,auto,auto,auto,*,auto"
             Grid.Column="0">
@@ -64,7 +64,7 @@
         <Button Content="Update Balances"
                 Command="{Binding GetBalanceCommand}"
                 VerticalContentAlignment="Center"
-                Height="35"
+                Height="40"
                 Grid.ColumnSpan="2" Grid.Row="0"/>
 
         <TextBlock Text="฿ "
@@ -106,7 +106,7 @@
                SelectedItem="{Binding SelectedAddress}"
                SelectedIndex="{Binding SelectedIndex}"
                Margin="3" Grid.Column="1">
-        
+
         <ListBox.Template>
           <ControlTemplate>
             <DockPanel LastChildFill="True">
@@ -121,6 +121,7 @@
             </DockPanel>
           </ControlTemplate>
         </ListBox.Template>
+
         <ListBox.DataTemplates>
           <DataTemplate DataType="{x:Type models:BitcoinAddress}">
             <Grid ColumnDefinitions="60,350,*">
@@ -156,6 +157,9 @@
         <Button ToolTip.Tip="Edit Selected" Command="{Binding EditCommand}">
           <Image Source="/Assets/Edit.png"/>
         </Button>
+        <Button ToolTip.Tip="Copy Selected Address" Command="{Binding CopyCommand}">
+          <Image Source="/Assets/Copy.png"/>
+        </Button>
         <Button ToolTip.Tip="Move Up" Command="{Binding MoveUpCommand}">
           <Image Source="/Assets/MoveUp.png"/>
         </Button>
@@ -166,12 +170,12 @@
 
     </Grid>
 
-    <StackPanel Grid.Row="2">
-      <TextBlock Text="{Binding Status}"
-                 Height="25"
-                 Background="LightGray"
-                 FontFamily="Comi"/>
-    </StackPanel>
+
+    <TextBlock Text="{Binding Status}"
+               Height="25"
+               Background="LightGray"
+               FontFamily="Comic Sans MS"
+               Grid.Row="2"/>
 
   </Grid>
 </Window>
