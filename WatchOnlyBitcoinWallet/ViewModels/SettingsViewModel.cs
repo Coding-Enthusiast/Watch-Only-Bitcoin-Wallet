@@ -65,6 +65,7 @@ namespace WatchOnlyBitcoinWallet.ViewModels
                 PriceServiceNames.MempoolSpace => new MempoolSpace(),
                 PriceServiceNames.Bitfinex => new Bitfinex(),
                 PriceServiceNames.Coindesk => new Coindesk(),
+                PriceServiceNames.CoinGecko => new CoinGecko(),
                 _ => throw new NotImplementedException(),
             };
 
