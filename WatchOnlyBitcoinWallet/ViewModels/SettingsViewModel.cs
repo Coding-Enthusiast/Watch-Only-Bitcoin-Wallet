@@ -62,7 +62,6 @@ namespace WatchOnlyBitcoinWallet.ViewModels
             PriceApi api = Settings.SelectedPriceApi switch
             {
                 PriceServiceNames.Bitfinex => new Bitfinex(),
-                PriceServiceNames.Btce => new Btce(),
                 PriceServiceNames.Coindesk => new Coindesk(),
                 _ => throw new NotImplementedException(),
             };
