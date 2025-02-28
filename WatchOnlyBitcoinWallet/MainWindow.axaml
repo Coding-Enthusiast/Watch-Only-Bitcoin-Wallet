@@ -81,7 +81,7 @@
         <TextBlock Text="{Binding BitcoinBalanceLC, StringFormat=\{0:N0\}}"
                    Grid.Column="1" Grid.Row="3"/>
 
-        <TextBlock Text="{Binding Errors}"
+        <TextBlock Text="{Binding Error}"
                    IsVisible="{Binding IsErrorMsgVisible}"
                    TextWrapping="Wrap"
                    Background="#FFECB1B1"

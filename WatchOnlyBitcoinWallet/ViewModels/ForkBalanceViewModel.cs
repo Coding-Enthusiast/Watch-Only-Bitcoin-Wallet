@@ -116,10 +116,10 @@ namespace WatchOnlyBitcoinWallet.ViewModels
         private async void GetTransactions()
         {
             Status = "Updating transaction lists...";
-            Errors = string.Empty;
+            Error = string.Empty;
             IsReceiving = true;
 
-            BalanceApi ba = new BlockCypher();
+            IBalanceApi ba = new BlockCypher();
             // Bech32 addresses in AddressList should be ignored until the block explorers and forks start supporting it.
             Response resp = await ba.UpdateTransactionListAsync(AddressList.Where(x =>
                     !x.Address.StartsWith("bc1", StringComparison.OrdinalIgnoreCase)).ToList());
@@ -148,9 +148,9 @@ namespace WatchOnlyBitcoinWallet.ViewModels
                 }
             }
 
-            if (resp.Errors.Any())
+            if (!resp.IsSuccess)
             {
-                Errors = resp.Errors.GetErrors();
+                Error = resp.Error;
                 Status = "Encountered an error!";
             }
             else

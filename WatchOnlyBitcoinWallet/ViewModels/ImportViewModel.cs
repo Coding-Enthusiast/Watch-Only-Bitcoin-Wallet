@@ -53,10 +53,10 @@ namespace WatchOnlyBitcoinWallet.ViewModels
         public BindableCommand ImportCommand { get; private set; }
         private void CheckAndImport()
         {
-            Errors = string.Empty;
+            Error = string.Empty;
             if (string.IsNullOrWhiteSpace(ImportText))
             {
-                Errors = "Input text can not be empty!";
+                Error = "Input text can not be empty!";
             }
             else
             {
@@ -71,12 +71,12 @@ namespace WatchOnlyBitcoinWallet.ViewModels
                     AddressType type = Address.GetAddressType(addr, NetworkType.MainNet);
                     if (type is AddressType.Unknown or AddressType.Invalid)
                     {
-                        Errors = $"Address on the {(i + 1).ToOrdinal()} line ({addr}) is invalid.";
+                        Error = $"Address on the {(i + 1).ToOrdinal()} line ({addr}) is invalid.";
                         return;
                     }
                     else if (addresses.Any(x => x.Address == addr))
                     {
-                        Errors = $"Wallet already contains the address on the {(i + 1).ToOrdinal()} line ({addr}).";
+                        Error = $"Wallet already contains the address on the {(i + 1).ToOrdinal()} line ({addr}).";
                         return;
                     }
 

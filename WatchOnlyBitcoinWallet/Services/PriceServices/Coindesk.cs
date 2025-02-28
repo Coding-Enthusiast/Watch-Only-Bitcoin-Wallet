@@ -11,15 +11,15 @@ using WatchOnlyBitcoinWallet.Models;
 
 namespace WatchOnlyBitcoinWallet.Services.PriceServices
 {
-    public class Coindesk : PriceApi
+    public class Coindesk : ApiBase, IPriceApi
     {
-        public override async Task<Response<decimal>> UpdatePriceAsync()
+        public async Task<Response<decimal>> UpdatePriceAsync()
         {
             Response<decimal> resp = new Response<decimal>();
             Response<JObject> apiResp = await SendApiRequestAsync("https://api.coindesk.com/v1/bpi/currentprice.json");
-            if (apiResp.Errors.Any())
+            if (!apiResp.IsSuccess)
             {
-                resp.Errors.AddRange(apiResp.Errors);
+                resp.Error = apiResp.Error;
                 return resp;
             }
             resp.Result = (decimal)apiResp.Result["bpi"]["USD"]["rate"];
@@ -32,9 +32,9 @@ namespace WatchOnlyBitcoinWallet.Services.PriceServices
         {
             Response<List<PriceHistory>> resp = new Response<List<PriceHistory>>();
             Response<JObject> apiResp = await SendApiRequestAsync($"https://api.coindesk.com/v1/bpi/historical/close.json?start={start.ToString("yyyy-mm-dd")}&end={end.ToString("yyyy-mm-dd")}");
-            if (apiResp.Errors.Any())
+            if (!apiResp.IsSuccess)
             {
-                resp.Errors.AddRange(apiResp.Errors);
+                resp.Error = apiResp.Error;
                 return resp;
             }
             resp.Result = new List<PriceHistory>();
@@ -45,7 +45,7 @@ namespace WatchOnlyBitcoinWallet.Services.PriceServices
                     decimal price = (decimal)apiResp.Result["bpi"][i.ToString("yyyy-mm-dd")];
                     resp.Result.Add(new PriceHistory() { Time = i, Price = price });
                 }
-                catch (Exception) { }                
+                catch (Exception) { }
             }
             return resp;
         }

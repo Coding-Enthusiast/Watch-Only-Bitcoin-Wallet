@@ -8,12 +8,25 @@ using WatchOnlyBitcoinWallet.MVVM;
 
 namespace WatchOnlyBitcoinWallet.Models
 {
-    public class Transaction : InpcBase
+    public class TxModel : InpcBase
     {
+        public TxModel()
+        {
+        }
+
+        public TxModel(string txId, int blkHeight, decimal amount, DateTime confTime)
+        {
+            TxId = txId;
+            BlockHeight = blkHeight;
+            Amount = amount;
+            ConfirmedTime = confTime;
+        }
+
+
         /// <summary>
         /// Transaction ID
         /// </summary>
-        public string TxId { get; set; }
+        public string TxId { get; set; } = string.Empty;
 
         /// <summary>
         /// Block height that contains the transaction.

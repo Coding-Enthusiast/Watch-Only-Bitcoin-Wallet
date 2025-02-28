@@ -3,59 +3,106 @@
 // Distributed under the MIT software license, see the accompanying
 // file LICENCE or http://www.opensource.org/licenses/mit-license.php.
 
+using Autarkysoft.Bitcoin;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using WatchOnlyBitcoinWallet.Models;
 
 namespace WatchOnlyBitcoinWallet.Services.BalanceServices
 {
-    public class BlockCypher : BalanceApi
+    public class BlockCypher : ApiBase, IBalanceApi
     {
-        public override async Task<Response> UpdateBalancesAsync(List<BitcoinAddress> addrList)
+        public async Task<Response> UpdateBalancesAsync(List<BitcoinAddress> addrList)
         {
-            Response resp = new Response();
-            foreach (var addr in addrList)
+            Response resp = new();
+            foreach (BitcoinAddress addr in addrList)
             {
-                string url = "https://api.blockcypher.com/v1/btc/main/addrs/" + addr.Address + "/balance";
+                string url = $"https://api.blockcypher.com/v1/btc/main/addrs/{addr.Address}/balance";
                 Response<JObject> apiResp = await SendApiRequestAsync(url);
-                if (apiResp.Errors.Any())
+                if (!apiResp.IsSuccess)
                 {
-                    resp.Errors.AddRange(apiResp.Errors);
+                    resp.Error = apiResp.Error;
                     break;
                 }
-                decimal bal = (Int64)apiResp.Result["final_balance"] * Satoshi;
+                Debug.Assert(apiResp.Result is not null);
+
+                ulong? t = (ulong?)apiResp.Result["final_balance"];
+                if (t is null)
+                {
+                    resp.Error = BuildError("final_balance", "BlockCypher");
+                    return resp;
+                }
+
+                decimal bal = t.Value * Constants.Satoshi;
                 addr.Difference = bal - addr.Balance;
                 addr.Balance = bal;
             }
+
+            resp.IsSuccess = true;
             return resp;
         }
 
 
-        public override async Task<Response> UpdateTransactionListAsync(List<BitcoinAddress> addrList)
+        public async Task<Response> UpdateTransactionListAsync(List<BitcoinAddress> addrList)
         {
-            Response resp = new Response();
+            Response resp = new();
             foreach (var addr in addrList)
             {
                 string url = "https://api.blockcypher.com/v1/btc/main/addrs/" + addr.Address + "?limit=2000";
                 Response<JObject> apiResp = await SendApiRequestAsync(url);
-                if (apiResp.Errors.Any())
+                if (!apiResp.IsSuccess)
                 {
-                    resp.Errors.AddRange(apiResp.Errors);
+                    resp.Error = apiResp.Error;
                     break;
                 }
-                List<Transaction> temp = new List<Transaction>();
-                foreach (var item in apiResp.Result["txrefs"])
-                {
-                    Transaction tx = new Transaction();
-                    tx.TxId = item["tx_hash"].ToString();
-                    tx.BlockHeight = (int)item["block_height"];
-                    tx.Amount = ((Int64)item["tx_input_n"] == -1) ? (Int64)item["value"] : -(Int64)item["value"];
-                    tx.ConfirmedTime = (DateTime)item["confirmed"];
+                Debug.Assert(apiResp.Result is not null);
 
-                    Transaction tempTx = temp.Find(x => x.TxId == tx.TxId);
-                    if (tempTx == null)
+                if (!TryExtract(apiResp.Result, "final_n_tx", out int cap, out string error))
+                {
+                    resp.Error = error;
+                    return resp;
+                }
+
+                if (cap == 0)
+                {
+                    resp.IsSuccess = true;
+                    return resp;
+                }
+
+                List<TxModel> temp = new(cap);
+                JToken? array = apiResp.Result["txrefs"];
+                if (array is null)
+                {
+                    resp.Error = BuildError("txrefs", "BlockCypher");
+                    return resp;
+                }
+
+                foreach (JToken? item in array)
+                {
+                    if (item is null)
+                    {
+                        resp.Error = BuildError("txrefs", "BlockCypher");
+                        return resp;
+                    }
+
+                    if (!TryExtract(item, "tx_hash", out string txId, out error) ||
+                        !TryExtract(item, "block_height", out int height, out error) ||
+                        !TryExtract(item, "tx_input_n", out int isOutput, out error) ||
+                        !TryExtract(item, "value", out ulong value, out error) ||
+                        !TryExtract(item, "confirmed", out DateTime time, out error))
+                    {
+                        resp.Error = error;
+                        return resp;
+                    }
+
+                    decimal amount = (isOutput == -1) ? (Constants.Satoshi * value) : (-Constants.Satoshi * value);
+                    TxModel tx = new(txId, height, amount, time);
+
+                    TxModel? tempTx = temp.Find(x => x.TxId == tx.TxId);
+                    if (tempTx is null)
                     {
                         temp.Add(tx);
                     }
@@ -64,7 +111,7 @@ namespace WatchOnlyBitcoinWallet.Services.BalanceServices
                         tempTx.Amount += tx.Amount;
                     }
                 }
-                temp.ForEach(x => x.Amount *= Satoshi);
+
                 addr.TransactionList = temp;
             }
             return resp;

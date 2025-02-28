@@ -64,6 +64,6 @@ namespace WatchOnlyBitcoinWallet.Models
             set => SetField(ref _forkBalance, value);
         }
 
-        public List<Transaction> TransactionList { get; set; } = new();
+        public List<TxModel> TransactionList { get; set; } = new();
     }
 }

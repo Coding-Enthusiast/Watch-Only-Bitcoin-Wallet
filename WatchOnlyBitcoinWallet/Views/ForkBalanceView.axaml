@@ -75,7 +75,7 @@
       </ListBox.DataTemplates>
     </ListBox>
 
-    <TextBlock Text="{Binding Errors}"
+    <TextBlock Text="{Binding Error}"
                TextWrapping="Wrap"
                ScrollViewer.VerticalScrollBarVisibility="Visible"
                Grid.Row="3"/>

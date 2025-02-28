@@ -21,13 +21,13 @@ namespace WatchOnlyBitcoinWallet.ViewModels
             private set => SetField(ref _isErrVisible, value);
         }
 
-        private string _errors = string.Empty;
-        public string Errors
+        private string _error = string.Empty;
+        public string Error
         {
-            get => _errors;
+            get => _error;
             set
             {
-                if (SetField(ref _errors, value))
+                if (SetField(ref _error, value))
                 {
                     IsErrorMsgVisible = !string.IsNullOrEmpty(value);
                 }

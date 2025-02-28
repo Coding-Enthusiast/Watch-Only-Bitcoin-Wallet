@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using WatchOnlyBitcoinWallet.Models;
 using WatchOnlyBitcoinWallet.MVVM;
 using WatchOnlyBitcoinWallet.Services;
+using WatchOnlyBitcoinWallet.Services.BalanceServices;
 using WatchOnlyBitcoinWallet.Services.PriceServices;
 
 namespace WatchOnlyBitcoinWallet.ViewModels
@@ -56,20 +57,21 @@ namespace WatchOnlyBitcoinWallet.ViewModels
         private async void UpdatePrice()
         {
             Status = "Fetching Bitcoin Price...";
-            Errors = string.Empty;
+            Error = string.Empty;
             IsReceiving = true;
 
-            PriceApi api = Settings.SelectedPriceApi switch
+            IPriceApi api = Settings.SelectedPriceApi switch
             {
+                PriceServiceNames.MempoolSpace => new MempoolSpace(),
                 PriceServiceNames.Bitfinex => new Bitfinex(),
                 PriceServiceNames.Coindesk => new Coindesk(),
                 _ => throw new NotImplementedException(),
             };
 
             Response<decimal> resp = await api.UpdatePriceAsync();
-            if (resp.Errors.Any())
+            if (!resp.IsSuccess)
             {
-                Errors = resp.Errors.GetErrors();
+                Error = resp.Error;
                 Status = "Encountered an error!";
             }
             else

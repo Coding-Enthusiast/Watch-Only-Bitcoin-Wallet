@@ -5,19 +5,24 @@
 
 namespace WatchOnlyBitcoinWallet.Services
 {
-    public class Response<T> : Response
-    {
-        public T Result { get; set; }
-    }
-
-
     public class Response
     {
-        private readonly ErrorCollection errors = new ErrorCollection();
+        public bool IsSuccess { get; set; } = true;
 
-        public ErrorCollection Errors
+        private string _error = string.Empty;
+        public string Error
         {
-            get { return errors; }
+            get => _error;
+            set
+            {
+                _error = value;
+                IsSuccess = false;
+            }
         }
+    }
+
+    public class Response<T> : Response
+    {
+        public T? Result { get; set; }
     }
 }

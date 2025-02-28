@@ -23,7 +23,6 @@ namespace WatchOnlyBitcoinWallet.ViewModels
         }
 
 
-
         public AddEditViewModel(IList<BitcoinAddress> addrList) : this(string.Empty, string.Empty, addrList)
         {
         }
@@ -67,13 +66,6 @@ namespace WatchOnlyBitcoinWallet.ViewModels
                     IsChanged = true;
                 }
             }
-        }
-
-        private string _error = string.Empty;
-        public string Error
-        {
-            get => _error;
-            set => SetField(ref _error, value);
         }
 
 

@@ -187,27 +187,21 @@ namespace WatchOnlyBitcoinWallet.ViewModels
         private async void GetBalance()
         {
             Status = "Updating Balances...";
-            Errors = string.Empty;
+            Error = string.Empty;
             IsReceiving = true;
 
-            BalanceApi api = null;
-            switch (SettingsInstance.SelectedBalanceApi)
+            IBalanceApi api = SettingsInstance.SelectedBalanceApi switch
             {
-                case BalanceServiceNames.BlockCypher:
-                    api = new BlockCypher();
-                    break;
-                case BalanceServiceNames.Blockonomics:
-                    api = new Blockonomics();
-                    break;
-                default:
-                    api = new BlockCypher();
-                    break;
-            }
+                BalanceServiceNames.MempoolSpace => new MempoolSpace(),
+                BalanceServiceNames.BlockCypher => new BlockCypher(),
+                BalanceServiceNames.Blockonomics => new Blockonomics(),
+                _ => new BlockCypher(),
+            };
 
             Response resp = await api.UpdateBalancesAsync(AddressList.ToList());
-            if (resp.Errors.Any())
+            if (!resp.IsSuccess)
             {
-                Errors = resp.Errors.GetErrors();
+                Error = resp.Error;
                 Status = "Encountered an error!";
             }
             else
@@ -248,7 +242,7 @@ namespace WatchOnlyBitcoinWallet.ViewModels
             }
             else
             {
-                Errors = "Nothing is selected!";
+                Error = "Nothing is selected!";
             }
         }
 
@@ -269,7 +263,7 @@ namespace WatchOnlyBitcoinWallet.ViewModels
             }
             else
             {
-                Errors = "Nothing is selected!";
+                Error = "Nothing is selected!";
             }
         }
 
@@ -278,7 +272,7 @@ namespace WatchOnlyBitcoinWallet.ViewModels
         {
             if (Clipboard is null)
             {
-                Errors = "Clipboard object is not set (this is a bug!).";
+                Error = "Clipboard object is not set (this is a bug!).";
             }
             else if (SelectedAddress is not null)
             {
@@ -286,7 +280,7 @@ namespace WatchOnlyBitcoinWallet.ViewModels
             }
             else
             {
-                Errors = "Nothing is selected!";
+                Error = "Nothing is selected!";
             }
         }
 
