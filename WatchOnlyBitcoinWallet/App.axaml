@@ -27,6 +27,9 @@
     <DataTemplate DataType="{x:Type vm:SettingsViewModel}">
       <views:SettingsView/>
     </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:MessageBoxViewModel}">
+      <views:MessageBoxView/>
+    </DataTemplate>
   </Application.DataTemplates>
 
   <Application.Styles>
