@@ -18,6 +18,8 @@ namespace WatchOnlyBitcoinWallet.Services.BalanceServices
         public async Task<Response> UpdateBalancesAsync(List<BitcoinAddress> addrList)
         {
             Response resp = new();
+            int count = 0;
+            Stopwatch timer = Stopwatch.StartNew();
             foreach (BitcoinAddress addr in addrList)
             {
                 string url = $"https://api.blockcypher.com/v1/btc/main/addrs/{addr.Address}/balance";
@@ -39,6 +41,20 @@ namespace WatchOnlyBitcoinWallet.Services.BalanceServices
                 decimal bal = t.Value * Constants.Satoshi;
                 addr.Difference = bal - addr.Balance;
                 addr.Balance = bal;
+
+                // Blockcypher limits calls to 3 per second
+                if (count == 3)
+                {
+                    count = 0;
+                    timer.Stop();
+                    if (timer.Elapsed < TimeSpan.FromSeconds(1))
+                    {
+                        int miliSecDelay = TimeConstants.MilliSeconds.OneSec - timer.Elapsed.Milliseconds;
+                        Debug.Assert(miliSecDelay > 0);
+                        await Task.Delay(miliSecDelay + 100);
+                    }
+                    timer.Restart();
+                }
             }
 
             resp.IsSuccess = true;
@@ -49,6 +65,8 @@ namespace WatchOnlyBitcoinWallet.Services.BalanceServices
         public async Task<Response> UpdateTransactionListAsync(List<BitcoinAddress> addrList)
         {
             Response resp = new();
+            int count = 0;
+            Stopwatch timer = Stopwatch.StartNew();
             foreach (var addr in addrList)
             {
                 string url = "https://api.blockcypher.com/v1/btc/main/addrs/" + addr.Address + "?limit=2000";
@@ -113,9 +131,22 @@ namespace WatchOnlyBitcoinWallet.Services.BalanceServices
                 }
 
                 addr.TransactionList = temp;
+
+                // Blockcypher limits calls to 3 per second
+                if (count == 3)
+                {
+                    count = 0;
+                    timer.Stop();
+                    if (timer.Elapsed < TimeSpan.FromSeconds(1))
+                    {
+                        int miliSecDelay = TimeConstants.MilliSeconds.OneSec - timer.Elapsed.Milliseconds;
+                        Debug.Assert(miliSecDelay > 0);
+                        await Task.Delay(miliSecDelay + 100);
+                    }
+                    timer.Restart();
+                }
             }
             return resp;
         }
-
     }
 }
