@@ -19,9 +19,9 @@ namespace WatchOnlyBitcoinWallet.Services
     }
     public enum BalanceServiceNames
     {
+        Blockchair,
         MempoolSpace,
         BlockCypher,
-        Blockchair,
     }
 
     public abstract class ApiBase

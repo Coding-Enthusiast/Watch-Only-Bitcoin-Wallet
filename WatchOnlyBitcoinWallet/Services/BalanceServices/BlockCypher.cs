@@ -27,7 +27,7 @@ namespace WatchOnlyBitcoinWallet.Services.BalanceServices
                 if (!apiResp.IsSuccess)
                 {
                     resp.Error = apiResp.Error;
-                    break;
+                    return resp;
                 }
                 Debug.Assert(apiResp.Result is not null);
 

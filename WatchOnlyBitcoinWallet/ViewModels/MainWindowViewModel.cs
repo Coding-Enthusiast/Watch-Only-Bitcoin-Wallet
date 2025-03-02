@@ -153,7 +153,8 @@ namespace WatchOnlyBitcoinWallet.ViewModels
         {
             SettingsViewModel vm = new(SettingsInstance);
             await WindowMan.ShowDialog(vm);
-            DataManager.WriteFile(SettingsInstance, DataManager.FileType.Settings);
+            RaisePropertyChanged(nameof(BitcoinBalance));
+            FileMan.WriteSettings(SettingsInstance);
         }
 
 
@@ -189,6 +190,7 @@ namespace WatchOnlyBitcoinWallet.ViewModels
             Status = "Updating Balances...";
             Error = string.Empty;
             IsReceiving = true;
+            decimal before = BitcoinBalance;
 
             IBalanceApi api = SettingsInstance.SelectedBalanceApi switch
             {
@@ -206,9 +208,10 @@ namespace WatchOnlyBitcoinWallet.ViewModels
             }
             else
             {
-                DataManager.WriteFile(AddressList, DataManager.FileType.Wallet);
-                RaisePropertyChanged("BitcoinBalance");
-                Status = "Balance Update Success!";
+                FileMan.WriteWallet(AddressList.ToList());
+                RaisePropertyChanged(nameof(BitcoinBalance));
+
+                Status = $"Balances updated (difference: {BitcoinBalance - before})";
             }
 
             IsReceiving = false;

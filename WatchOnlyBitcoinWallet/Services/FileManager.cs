@@ -112,6 +112,13 @@ namespace WatchOnlyBitcoinWallet.Services
         public List<BitcoinAddress> ReadWalletFile()
         {
             List<BitcoinAddress>? result = ReadFile<List<BitcoinAddress>>(walletPath);
+
+            // For backward compatibility
+            if (result is null)
+            {
+                result = DataManager.ReadFile<List<BitcoinAddress>>(DataManager.FileType.Wallet);
+            }
+
             return result ?? new List<BitcoinAddress>();
         }
 
