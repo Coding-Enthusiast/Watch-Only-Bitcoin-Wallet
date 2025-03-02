@@ -22,6 +22,10 @@ namespace WatchOnlyBitcoinWallet.Services
     {
         public Task ShowDialog(ViewModelBase vm)
         {
+            var lf = (IClassicDesktopStyleApplicationLifetime?)Application.Current?.ApplicationLifetime;
+            Debug.Assert(lf is not null);
+            Debug.Assert(lf.MainWindow is not null);
+
             Window win = new()
             {
                 Content = vm,
@@ -30,13 +34,10 @@ namespace WatchOnlyBitcoinWallet.Services
                 CanResize = false,
                 ShowInTaskbar = false,
                 Title = vm.GetType().Name.Replace("ViewModel", ""),
+                Icon = lf.MainWindow.Icon
             };
 
             vm.CLoseEvent += (s, e) => win.Close();
-
-            var lf = (IClassicDesktopStyleApplicationLifetime?)Application.Current?.ApplicationLifetime;
-            Debug.Assert(lf is not null);
-            Debug.Assert(lf.MainWindow is not null);
 
             return win.ShowDialog(lf.MainWindow);
         }
