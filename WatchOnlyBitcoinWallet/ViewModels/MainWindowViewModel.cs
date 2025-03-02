@@ -194,7 +194,7 @@ namespace WatchOnlyBitcoinWallet.ViewModels
             {
                 BalanceServiceNames.MempoolSpace => new MempoolSpace(),
                 BalanceServiceNames.BlockCypher => new BlockCypher(),
-                BalanceServiceNames.Blockonomics => new Blockonomics(),
+                BalanceServiceNames.Blockchair => new Blockchair(),
                 _ => new BlockCypher(),
             };
 

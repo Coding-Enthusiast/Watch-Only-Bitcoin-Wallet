@@ -21,7 +21,7 @@ namespace WatchOnlyBitcoinWallet.Services
     {
         MempoolSpace,
         BlockCypher,
-        Blockonomics,
+        Blockchair,
     }
 
     public abstract class ApiBase
