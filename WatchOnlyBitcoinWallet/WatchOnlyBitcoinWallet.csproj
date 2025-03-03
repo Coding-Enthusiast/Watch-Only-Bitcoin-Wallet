@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
     <FileVersion>4.0.0</FileVersion>
     <AssemblyVersion>4.0.0</AssemblyVersion>
+    <ApplicationIcon>Assets\myICO.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
