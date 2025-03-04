@@ -4,6 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:WatchOnlyBitcoinWallet.ViewModels"
              xmlns:models="using:WatchOnlyBitcoinWallet.Models"
+             x:CompileBindings="True"
+             x:DataType="vm:ForkBalanceViewModel"
              mc:Ignorable="d"
              x:Class="WatchOnlyBitcoinWallet.Views.ForkBalanceView"
              Height="300" Width="600"

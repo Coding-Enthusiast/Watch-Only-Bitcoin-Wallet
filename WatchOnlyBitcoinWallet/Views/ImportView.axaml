@@ -3,6 +3,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:WatchOnlyBitcoinWallet.ViewModels"
+             x:CompileBindings="True"
+             x:DataType="vm:ImportViewModel"
              mc:Ignorable="d"
              x:Class="WatchOnlyBitcoinWallet.Views.ImportView"
              Height="350" Width="460"
@@ -34,7 +36,7 @@
              Margin="3"
              Grid.ColumnSpan="2" Grid.Row="1"/>
 
-    <TextBlock Text="{Binding Errors}"
+    <TextBlock Text="{Binding Error}"
                TextWrapping="Wrap"
                Grid.ColumnSpan="2" Grid.Row="2"/>
   </Grid>
