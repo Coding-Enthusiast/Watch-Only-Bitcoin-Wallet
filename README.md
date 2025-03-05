@@ -1,39 +1,35 @@
-![Logo](https://i.imgur.com/9FtfXzM.jpg)
+[![.NET-CI](https://github.com/Coding-Enthusiast/Watch-Only-Bitcoin-Wallet/actions/workflows/dotnetCI.yml/badge.svg)](https://github.com/Coding-Enthusiast/Watch-Only-Bitcoin-Wallet/actions/workflows/dotnetCI.yml)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/Coding-Enthusiast/Watch-Only-Bitcoin-Wallet/blob/master/LICENSE.md)
+[![Target](https://img.shields.io/badge/dynamic/xml?color=%23512bd4&label=target&query=%2F%2FTargetFramework%5B1%5D&url=https%3A%2F%2Fraw.githubusercontent.com%2FCoding-Enthusiast%2FWatch-Only-Bitcoin-Wallet%2Fmaster%2FWatchOnlyBitcoinWallet%2FWatchOnlyBitcoinWallet.csproj&logo=.net)](https://github.com/Coding-Enthusiast/Watch-Only-Bitcoin-Wallet/blob/master/WatchOnlyBitcoinWallet/WatchOnlyBitcoinWallet.csproj)
+[![Downloads](https://img.shields.io/github/downloads/Coding-Enthusiast/Watch-Only-Bitcoin-Wallet/total)](https://github.com/Coding-Enthusiast/Watch-Only-Bitcoin-Wallet/releases)
+
+<p align="center">
+    <img width=200 src="https://i.imgur.com/9FtfXzM.jpg" alt="logo"/>
+</p>
+
 # Watch Only Bitcoin Wallet
 
-**Packages needed:** Newtonsoft.Json
+A simple tool to keep track of all your bitcoin addresses with their balance using block explorers APIs.
 
-This is a simple open source tool created to help keep track of bitcoin addresses and their balances in a light application.
-![ScreenShot](https://i.imgur.com/013QHQ0.jpg)
+![Preview](/Doc/Images/MainPreview.jpg)
 
+You can import addresses one by one or in bulk from a text file. Each address can have a
+name or tag as a reminder of what that address is.  
+Balance and bitcoin price are updated using various API services that you can select from the
+settings window.  
 
-## Features
-1. Capable of holding multiple bitcoin addresses with tags, address and their balances.
-2. Validating each address with Base58_encoding and new Bech32 format for Segregated Witness.
-3. Using a grid (like excel) to show the list which makes it easy to add/edit/remove items.
-4. Import addresses in bulk from file or paste in textbox (seperate by newline).
-5. Using diffirent block explorer API services to update balances (blockchain.info, blockexplorer, blockcypher).
-6. See the total bitcoin amount in BTC, USD and user defined local currency.
-7. USD value can be retreived from Bitfinex.com or Btc-e.com exchanges using their API.
-8. View balance at a specific block height. This is useful for checking how much you owned when a fork like bitcoin cash happened.
-
-![ScreenShot](https://i.imgur.com/kskLnGh.jpg)
-
+Using the ForkBalance window you can check if your address had any balance at the time when 
+some of the past altcoins were created out of bitcoin, like bitcoin-cash.  
 
 ## Announcement Link
-Topic on bitcointalk.org
+Topic on bitcointalk https://bitcointalk.org/index.php?topic=1616888.0
 
-https://bitcointalk.org/index.php?topic=1616888.0
+## Contributing
+Contributions are welcomed. Please check out [conventions](https://github.com/Autarkysoft/Conventions) for information about coding styles, versioning, making pull requests, and more.
 
-
-### Don't forget to leave your feedback, Thank you.
-**Wanna help?** 
-
-Then review the code and leave your feedback.
-
-**Wanna help more?**
-
-[Donate: 1Q9swRQuwhTtjZZ2yguFWk7m7pszknkWyk](bitcoin:1Q9swRQuwhTtjZZ2yguFWk7m7pszknkWyk)  
-[SegWit: bc1q3n5t9gv40ayq68nwf0yth49dt5c799wpld376s](bitcoin:bc1q3n5t9gv40ayq68nwf0yth49dt5c799wpld376s)
+## Donations
+If You found this tool helpful consider making a donation:  
+Legacy address: 1Q9swRQuwhTtjZZ2yguFWk7m7pszknkWyk  
+SegWit address: bc1q3n5t9gv40ayq68nwf0yth49dt5c799wpld376s
 
 ![QR](https://i.imgur.com/oz9UvFM.png)  ![QR](https://i.imgur.com/UMGQ2Ck.jpg)
