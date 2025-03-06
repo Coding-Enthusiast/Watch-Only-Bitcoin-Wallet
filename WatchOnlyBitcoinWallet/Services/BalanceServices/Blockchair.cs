@@ -24,7 +24,20 @@ namespace WatchOnlyBitcoinWallet.Services.BalanceServices
             Response<JObject> apiResp = await SendApiRequestAsync(url);
             if (!apiResp.IsSuccess)
             {
-                resp.Error = apiResp.Error;
+                if (apiResp.Error.Contains("402") || apiResp.Error.Contains("429")|| apiResp.Error.Contains("435"))
+                {
+                    resp.Error = "You've exceeded blockchair's limit. " +
+                                 "Select a different API service in settings window.";
+                }
+                else if (apiResp.Error.Contains("430") || apiResp.Error.Contains("434") || apiResp.Error.Contains("503"))
+                {
+                    resp.Error = "Blockchair blacklisted your IP! " +
+                                 "Change your IP address or select a different API service in settings window.";
+                }
+                else
+                {
+                    resp.Error = apiResp.Error; 
+                }
                 return resp;
             }
             Debug.Assert(apiResp.Result is not null);
