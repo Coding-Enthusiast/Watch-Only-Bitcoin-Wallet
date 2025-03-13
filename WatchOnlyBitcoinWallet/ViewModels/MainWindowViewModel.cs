@@ -190,7 +190,7 @@ namespace WatchOnlyBitcoinWallet.ViewModels
             Status = "Updating Balances...";
             Error = string.Empty;
             IsReceiving = true;
-            decimal before = BitcoinBalance;
+            decimal prevBal = BitcoinBalance;
 
             IBalanceApi api = SettingsInstance.SelectedBalanceApi switch
             {
@@ -211,7 +211,10 @@ namespace WatchOnlyBitcoinWallet.ViewModels
                 FileMan.WriteWallet(AddressList.ToList());
                 RaisePropertyChanged(nameof(BitcoinBalance));
 
-                Status = $"Balances updated (difference: {BitcoinBalance - before})";
+                decimal diff = BitcoinBalance - prevBal;
+                decimal diff1 = diff * SettingsInstance.BitcoinPriceInUSD;
+                decimal diff2 = diff1 * SettingsInstance.DollarPriceInLocalCurrency;
+                Status = $"Balances updated (difference: {diff} = ${diff1:N2} = {SettingsInstance.LocalCurrencySymbol}{diff2:N2})";
             }
 
             IsReceiving = false;
