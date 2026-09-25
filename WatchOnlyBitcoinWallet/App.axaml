@@ -3,12 +3,16 @@
              xmlns:local="clr-namespace:WatchOnlyBitcoinWallet"
              xmlns:vm="clr-namespace:WatchOnlyBitcoinWallet.ViewModels"
              xmlns:views="clr-namespace:WatchOnlyBitcoinWallet.Views"
-             xmlns:xxx="clr-namespace:WatchOnlyBitcoinWallet"
              x:Class="WatchOnlyBitcoinWallet.App"
              RequestedThemeVariant="Default">
 
   <Application.Styles>
     <FluentTheme/>
+
+    <Style Selector="Button">
+      <Setter Property="HorizontalContentAlignment" Value="Center"/>
+      <Setter Property="VerticalContentAlignment" Value="Center"/>
+    </Style>
   </Application.Styles>
 
   <Application.DataTemplates>
@@ -31,10 +35,4 @@
       <views:MessageBoxView/>
     </DataTemplate>
   </Application.DataTemplates>
-
-  <Application.Styles>
-    <Style Selector="Button">
-      <Setter Property="HorizontalContentAlignment" Value="Center"/>
-    </Style>
-  </Application.Styles>
 </Application>

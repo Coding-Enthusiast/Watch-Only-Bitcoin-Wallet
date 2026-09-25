@@ -4,7 +4,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="using:WatchOnlyBitcoinWallet.ViewModels"
         xmlns:models="using:WatchOnlyBitcoinWallet.Models"
-        xmlns:views="clr-namespace:WatchOnlyBitcoinWallet.Views"
         xmlns:mvvm="clr-namespace:WatchOnlyBitcoinWallet.MVVM.Converters"
         mc:Ignorable="d"
         x:Name="windowMain"
@@ -29,7 +28,6 @@
     <KeyBinding Gesture="F1" Command="{Binding OpenAboutCommand}"/>
     <KeyBinding Gesture="F2" Command="{Binding OpenSettingsCommand}"/>
     <KeyBinding Gesture="F3" Command="{Binding ForkBalanceCommand}"/>
-
   </Window.KeyBindings>
 
   <Grid RowDefinitions="auto,*,auto">
@@ -63,7 +61,6 @@
 
         <Button Content="Update Balances"
                 Command="{Binding GetBalanceCommand}"
-                VerticalContentAlignment="Center"
                 Height="40"
                 Grid.ColumnSpan="2" Grid.Row="0"/>
 
@@ -88,18 +85,37 @@
                    ScrollViewer.VerticalScrollBarVisibility="Visible"
                    Grid.ColumnSpan="2" Grid.Row="4"/>
 
-        <TextBlock Text="{Binding VersionString, Mode=OneTime}"
-                   FontWeight="Bold"
-                   TextAlignment="Center"
-                   Background="#FFADD8EC"
-                   Cursor="Hand"
-                   FontFamily="Comic Sans MS"
-                   Margin="3"
-                   Grid.ColumnSpan="2" Grid.Row="5">
-          <TextBlock.Effect>
-            <DropShadowEffect BlurRadius="20"/>
-          </TextBlock.Effect>
-        </TextBlock>
+        <Button Command="{Binding OpenAboutCommand}"
+                Background="#FFADD8EC"
+                Cursor="Hand"
+                BorderThickness="2"
+                CornerRadius="7"
+                Grid.ColumnSpan="2" Grid.Row="5">
+          <Button.Effect>
+            <DropShadowEffect Color="Black"
+                              Opacity="0.2"
+                              BlurRadius="3"
+                              OffsetX="2" OffsetY="2"/>
+          </Button.Effect>
+          <Button.Styles>
+            <Style Selector="Button:pointerover/template/ContentPresenter">
+              <Setter Property="Background" Value="#FFBFE5F5"/>
+            </Style>
+          </Button.Styles>
+
+          <TextBlock Text="{Binding VersionString, Mode=OneTime}"
+                     FontWeight="Bold"
+                     TextAlignment="Center"
+                     FontFamily="Comic Sans MS">
+            <TextBlock.Effect>
+              <DropShadowEffect Color="Black"
+                                Opacity="0.4"
+                                BlurRadius="2"
+                                OffsetX="1"
+                                OffsetY="1"/>
+            </TextBlock.Effect>
+          </TextBlock>
+        </Button>
       </Grid>
 
       <ListBox ItemsSource="{Binding AddressList}"
