@@ -41,6 +41,55 @@ namespace WatchOnlyBitcoinWallet.Services.BalanceServices
         }
 
 
+        public async Task<Response<List<PriceHistory>>> GetPriceHistoryAsync(DateTime start, DateTime end)
+        {
+            Response<List<PriceHistory>> resp = new();
+            Response<JObject> apiResp = await SendApiRequestAsync($"{BaseUrl}v1/historical-price?currency=USD");
+            if (!apiResp.IsSuccess)
+            {
+                resp.Error = apiResp.Error;
+                return resp;
+            }
+            if (apiResp.Result is null)
+            {
+                resp.Error = "Result is not set (this is a bug!)";
+                return resp;
+            }
+
+            JToken? priceArray = apiResp.Result["prices"];
+            if (priceArray is null)
+            {
+                resp.Error = "API response does not include \"prices\" token.";
+                return resp;
+            }
+
+            resp.Result = new List<PriceHistory>();
+            foreach (JToken item in priceArray)
+            {
+                try
+                {
+                    long? time = (long?)item["time"];
+                    decimal? price = (decimal?)item["USD"];
+                    if (!time.HasValue || !price.HasValue)
+                    {
+                        resp.Error = "API response does not include \"time\" and/or \"USD\" token.";
+                        return resp;
+                    }
+
+                    PriceHistory temp = new(time.Value, price.Value);
+                    resp.Result.Add(temp);
+                }
+                catch (Exception ex)
+                {
+                    resp.Error = $"An exception was thrown: {ex.Message}";
+                    return resp;
+                }
+            }
+            
+            return resp;
+        }
+
+
         public async Task<Response> UpdateBalancesAsync(List<BitcoinAddress> addrList)
         {
             Response<decimal> resp = new();
