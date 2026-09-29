@@ -46,7 +46,7 @@
       <ListBox.Template>
         <ControlTemplate>
           <DockPanel LastChildFill="True">
-            <Grid DockPanel.Dock="Top" ColumnDefinitions="60,350,60,*">
+            <Grid DockPanel.Dock="Top" ColumnDefinitions="60,350,90,*">
               <TextBlock Text="Name" HorizontalAlignment="Center" Grid.Column="0"/>
               <TextBlock Text="Address" HorizontalAlignment="Center" Grid.Column="1"/>
               <TextBlock Text="Balance" HorizontalAlignment="Center" Grid.Column="2"/>
@@ -61,7 +61,7 @@
 
       <ListBox.DataTemplates>
         <DataTemplate DataType="{x:Type models:BitcoinAddress}">
-          <Grid ColumnDefinitions="60,350,60,*">
+          <Grid ColumnDefinitions="60,350,90,*">
             <TextBlock Text="{Binding Name}" Grid.Column="0"/>
             <TextBlock Text="{Binding Address}" Grid.Column="1"/>
             <TextBlock Text="{Binding ForkBalance, StringFormat=\{0:N8\}}"
