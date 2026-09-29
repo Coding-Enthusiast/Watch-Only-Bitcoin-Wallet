@@ -37,6 +37,7 @@ namespace WatchOnlyBitcoinWallet.ViewModels
             Bitcore = 463604,
             BitcoinCash = 478558,
             BitcoinGold = 491407,
+            BitcoinBlake = 961632,
             /// Many forks have been scams or didn't even happen. Uncomment/Edit the following lines to have these listed.
             //Bitcore2 = 492820,
             //BitcoinX = 498888,
