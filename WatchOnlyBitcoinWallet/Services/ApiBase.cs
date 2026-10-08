@@ -14,7 +14,6 @@ namespace WatchOnlyBitcoinWallet.Services
     {
         MempoolSpace,
         Bitfinex,
-        Coindesk,
         CoinGecko,
     }
     public enum BalanceServiceNames
