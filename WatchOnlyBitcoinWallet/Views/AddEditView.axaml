@@ -16,11 +16,11 @@
 
   <Grid ColumnDefinitions="400,*" RowDefinitions="auto,auto,*">
     <TextBox Text="{Binding AddressString}"
-             Watermark="Enter a valid bitcoin address"
+             PlaceholderText="Enter a valid bitcoin address"
              Margin="2"
              Grid.Column="0" Grid.Row="0"/>
     <TextBox Text="{Binding Tag}"
-             Watermark="[Optional] Enter a name for this address"
+             PlaceholderText="[Optional] Enter a name for this address"
              Margin="2"
              Grid.Column="0" Grid.Row="1"/>
     <TextBlock Text="{Binding Error}"
