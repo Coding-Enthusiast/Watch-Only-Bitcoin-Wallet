@@ -140,18 +140,24 @@ namespace WatchOnlyBitcoinWallet.Services.BalanceServices
                     resp.Error = apiResp.Error;
                     return resp;
                 }
+                if (apiResp.Result is null)
+                {
+                    resp.Error = "Successful API response should include a non-null result (this is a bug).";
+                    return resp;
+                }
+
                 List<TxModel> temp = new();
                 foreach (var item in apiResp.Result["txrefs"])
                 {
                     TxModel tx = new()
                     {
-                        TxId = item["txid"].ToString(),
+                        TxId = item["txid"]?.ToString(),
                         BlockHeight = (int)item["status"]["block_height"],
-                        Amount = ((Int64)item["tx_input_n"] == -1) ? (Int64)item["value"] : -(Int64)item["value"],
+                        Amount = ((long)item["tx_input_n"] == -1) ? (long)item["value"] : -(long)item["value"],
                         ConfirmedTime = (DateTime)item["confirmed"]
                     };
 
-                    TxModel tempTx = temp.Find(x => x.TxId == tx.TxId);
+                    TxModel? tempTx = temp.Find(x => x.TxId == tx.TxId);
                     if (tempTx is null)
                     {
                         temp.Add(tx);
