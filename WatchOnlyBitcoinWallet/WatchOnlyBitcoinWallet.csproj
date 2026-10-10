@@ -4,8 +4,8 @@
     <TargetFramework>net10.0</TargetFramework>
     <OutputType>WinExe</OutputType>
     <Nullable>enable</Nullable>
-    <FileVersion>4.0.1</FileVersion>
-    <AssemblyVersion>4.0.1</AssemblyVersion>
+    <FileVersion>4.1.0</FileVersion>
+    <AssemblyVersion>4.1.0</AssemblyVersion>
     <ApplicationIcon>Assets\myICO.ico</ApplicationIcon>
   </PropertyGroup>
 
@@ -15,9 +15,9 @@
 
   <ItemGroup>
     <PackageReference Include="Autarkysoft.Bitcoin" Version="0.28.0" />
-    <PackageReference Include="Avalonia" Version="12.1.1" />
-    <PackageReference Include="Avalonia.Desktop" Version="12.1.1" />
-    <PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.1" />
+    <PackageReference Include="Avalonia" Version="12.1.4" />
+    <PackageReference Include="Avalonia.Desktop" Version="12.1.4" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.4" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
   </ItemGroup>
 
